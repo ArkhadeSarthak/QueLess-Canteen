@@ -78,12 +78,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondaryBackground,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: SafeArea(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -96,6 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: AppColors.white,
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
@@ -120,7 +121,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              "SA",
+                                              user?["name"].substring(0, 1) ??
+                                                  "",
                                               style: TextStyle(
                                                 color: AppColors.white,
                                                 fontWeight: FontWeight.bold,
@@ -506,10 +508,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-          ),
-
-          if (_isZoomed) ProfileImage(),
-        ],
+        
+            if (_isZoomed) ProfileImage(),
+          ],
+        ),
       ),
     );
   }

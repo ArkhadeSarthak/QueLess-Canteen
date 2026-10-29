@@ -5,8 +5,9 @@ class UserResponse(BaseModel):
     id: str
     name: str
     roll_no: str
+    role: str
     email: str
-    profile_image: str
+    profile_image: str | None = None
 
 
 class TokenResponce(BaseModel):

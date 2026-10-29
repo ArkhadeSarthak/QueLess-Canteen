@@ -20,6 +20,7 @@ def create_food_item(db: Session, foodItem: NewFoodItem):
             description=foodItem.description,
             price=foodItem.price,
             category=foodItem.category,
+            image_url=foodItem.image_url,
         )
 
         db.add(new_food_item)
@@ -51,4 +52,63 @@ def get_all_food_items(db: Session):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to fetch food items : {str(e)}",
+        )
+
+
+def delete_food_item(db: Session, id: int):
+    try:
+        existing_item = db.query(FoodItems).filter(FoodItems.id == id).first()
+
+        if not existing_item:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Food item not available or already deleted",
+            )
+
+        db.delete(existing_item)
+        db.commit()
+
+        return {
+            "message": "Food item deleted successfully",
+        }
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete food item: {str(e)}",
+        )
+
+
+def update_food_item(db: Session, foodItem: NewFoodItem, id: int):
+    try:
+        existing_item = db.query(FoodItems).filter(FoodItems.id == id).first()
+        if not existing_item:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Item not found",
+            )
+
+        existing_item.name = foodItem.name
+        existing_item.description = foodItem.description
+        existing_item.price = foodItem.price
+        existing_item.category = foodItem.category
+        existing_item.image_url = foodItem.image_url
+
+        db.commit()
+        db.refresh(existing_item)
+
+        return existing_item
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to update food item: {str(e)}",
         )

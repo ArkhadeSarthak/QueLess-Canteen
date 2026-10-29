@@ -32,7 +32,7 @@ class _BottonNavigationBarState extends State<BottonNavigationBar> {
         unselectedItemColor: AppColors.badgeBack,
         currentIndex: _currentIndex,
         backgroundColor: AppColors.white,
-        margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         onTap: (i) => setState(() {
           _currentIndex = i;
         }),
