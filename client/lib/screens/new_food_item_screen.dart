@@ -66,7 +66,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
     });
 
     try {
-      final url = Uri.parse("http://10.0.2.2:8000/images/upload");
+      final url = Uri.parse("https://queueless-canteen-rho.vercel.app/images/upload");
       final request = http.MultipartRequest("POST", url);
 
       request.files.add(
