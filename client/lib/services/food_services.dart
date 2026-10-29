@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FoodServices {
-  static String baseURL = "http://10.0.2.2:8000/food";
+  static String baseURL = "https://queueless-canteen-rho.vercel.app/food";
 
   Future<List<GetAllFoodItemsModel>> featchFoodItems() async {
     final response = await http.get(Uri.parse("$baseURL/"));
