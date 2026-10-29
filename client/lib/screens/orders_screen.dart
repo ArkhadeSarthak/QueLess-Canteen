@@ -31,12 +31,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondaryBackground,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: SafeArea(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -546,10 +546,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ),
               ),
             ),
-          ),
-
-          if (_isZoomed) ProfileImage(),
-        ],
+        
+            if (_isZoomed) ProfileImage(),
+          ],
+        ),
       ),
     );
   }

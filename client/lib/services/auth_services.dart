@@ -96,14 +96,18 @@ class AuthServices {
           backgroundColor: AppColors.lightGreen,
         ),
       );
-      loginUser(context: context, email: email, password: password);
+      loginUser(
+        context: context,
+        email: email,
+        password: password,
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             "Can't create account (Status code : ${response.statusCode})",
           ),
-          backgroundColor: AppColors.lightGreen,
+          backgroundColor: AppColors.orange,
         ),
       );
       throw Exception(

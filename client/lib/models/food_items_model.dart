@@ -2,7 +2,7 @@ class GetAllFoodItemsModel {
   final int id;
   final String name;
   final String description;
-  final String price;
+  final double price;
   final String category;
   final dynamic imageUrl;
   final bool isAvailable;
@@ -22,7 +22,7 @@ class GetAllFoodItemsModel {
         id: json["id"],
         name: json["name"],
         description: json["description"],
-        price: json["price"],
+        price: double.tryParse(json["price"].toString()) ?? 0.0,
         category: json["category"],
         imageUrl: json["image_url"],
         isAvailable: json["is_available"],

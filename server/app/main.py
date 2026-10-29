@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.core.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import authRoutes, userRoutes, foodRoutes
+from app.routes import authRoutes, userRoutes, foodRoutes, imageRoutes
 
 app = FastAPI(
     title="QueueLess Canteen Backend",
@@ -21,6 +21,7 @@ app.add_middleware(
 app.include_router(authRoutes.router)
 app.include_router(userRoutes.router)
 app.include_router(foodRoutes.router)
+app.include_router(imageRoutes.router)
 
 try:
     Base.metadata.create_all(bind=engine)

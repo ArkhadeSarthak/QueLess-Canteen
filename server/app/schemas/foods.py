@@ -5,8 +5,9 @@ from decimal import Decimal
 class NewFoodItem(BaseModel):
     name: str
     description: str
-    price: str
+    price: Decimal
     category: str
+    image_url: str
 
 
 class FoodItemRespone(BaseModel):

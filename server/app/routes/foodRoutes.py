@@ -47,5 +47,50 @@ def get_all_food_items(db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred during featchin food items : {str(e)}",
+            detail=f"An unexpected error occurred during featch food items : {str(e)}",
+        )
+
+
+@router.delete("/{id}")
+def delete_food_item(id: int, db: Session = Depends(get_db)):
+    try:
+        return food_services.delete_food_item(db, id)
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred during delete food item : {str(e)}",
+        )
+
+
+@router.put(
+    "/update-item/{id}",
+    status_code=status.HTTP_200_OK,
+    summary="Updates existing food item",
+)
+def update_food_item(
+    id: int,
+    item: NewFoodItem,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role != "chief":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You can't add a food item",
+        )
+
+    try:
+        return food_services.update_food_item(db, item, id)
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred during creating an item : {str(e)}",
         )

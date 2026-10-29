@@ -74,10 +74,10 @@ class _TopBarState extends State<TopBar> {
           ),
         ),
         Spacer(),
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.notifications_outlined, color: AppColors.darkGreen),
-        ),
+        // IconButton(
+        //   onPressed: () {},
+        //   icon: Icon(Icons.notifications_outlined, color: AppColors.darkGreen),
+        // ),
         SizedBox(width: 10),
         GestureDetector(
           onTapDown: (details) => widget.zoomIn(),
@@ -97,7 +97,7 @@ class _TopBarState extends State<TopBar> {
                     decoration: BoxDecoration(color: AppColors.badgeBack),
                     child: Center(
                       child: Text(
-                        "SA",
+                        user?["name"].substring(0, 1) ?? "",
                         style: TextStyle(
                           color: AppColors.white,
                           fontWeight: FontWeight.bold,

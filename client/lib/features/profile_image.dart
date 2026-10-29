@@ -80,7 +80,7 @@ class _ProfileImageState extends State<ProfileImage> {
                   ),
                   child: Center(
                     child: Text(
-                      "SA",
+                      user?["name"].substring(0, 1) ?? "",
                       style: TextStyle(
                         color: AppColors.white,
                         fontWeight: FontWeight.bold,

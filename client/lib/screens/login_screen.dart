@@ -1,3 +1,4 @@
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:queue_less/services/auth_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:queue_less/theme/app_strings.dart';
@@ -27,6 +28,19 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthServices _authServices = AuthServices();
 
   Future<void> login() async {
+    if (!await InternetConnection().hasInternetAccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Not connected to internet",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return;
+    }
+
     if (_formkey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
