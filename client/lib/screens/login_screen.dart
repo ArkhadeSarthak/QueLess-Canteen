@@ -1,5 +1,8 @@
+import 'package:flutter_modern_animated_loader/flutter_animated_loader.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:queue_less/services/auth_services.dart';
+// import 'package:queue_less/services/token_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:queue_less/theme/app_strings.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
         SnackBar(
           content: Text(
             "Not connected to internet",
-            style: TextStyle(color: AppColors.white),
+            style: GoogleFonts.outfit(color: AppColors.white),
           ),
           backgroundColor: AppColors.redOrange,
         ),
@@ -45,14 +48,23 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = true;
       });
-      _authServices.loginUser(
-        context: context,
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      setState(() {
-        _isLoading = false;
-      });
+      try {
+        await _authServices.loginUser(
+          context: context,
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Internel server error : $e")));
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -74,7 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: [
                           Image(
-                            image: AssetImage("assets/images/skip_wait.png"),
+                            image: AssetImage(
+                              "assets/images/lightning_cloche.png",
+                            ),
                             height: 120,
                             width: 120,
                             fit: BoxFit.cover,
@@ -82,12 +96,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                AppStrings.logo,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.black,
+                              ShaderMask(
+                                shaderCallback: (bounds) {
+                                  return LinearGradient(
+                                    colors: [
+                                      AppColors.black,
+                                      AppColors.lightGreen,
+                                      AppColors.green,
+                                    ],
+                                  ).createShader(bounds);
+                                },
+                                child: Text(
+                                  AppStrings.logo,
+                                  style: GoogleFonts.dancingScript(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.white,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 10),
@@ -104,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 child: Text(
                                   AppStrings.dining,
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 14,
                                     color: AppColors.darkGreen,
                                     fontWeight: FontWeight.w600,
@@ -133,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 SizedBox(width: 5),
                                 Text(
                                   "Student & staff portal",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -160,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       SizedBox(width: 5),
                                       Text(
                                         "Campus food hall",
-                                        style: TextStyle(
+                                        style: GoogleFonts.outfit(
                                           fontSize: 12,
                                           color: AppColors.darkGreen,
                                           fontWeight: FontWeight.w600,
@@ -177,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 AppStrings.greeting,
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   color: AppColors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
@@ -191,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: double.infinity,
                             child: Text(
                               "Sign in to order your favorites and skip canteen lines.",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: AppColors.darkGreen,
                                 fontSize: 14,
                               ),
@@ -203,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 "College / Student Email",
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.darkGreen,
@@ -211,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Text(
                                 "e.g.. edu / campus id",
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   color: AppColors.secondaryGreen,
                                   fontSize: 11,
                                 ),
@@ -223,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             controller: _emailController,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.darkGreen,
@@ -253,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 size: 18,
                               ),
                               hintText: "student@college.edu",
-                              hintStyle: TextStyle(
+                              hintStyle: GoogleFonts.outfit(
                                 color: AppColors.darkGreen,
                                 fontSize: 12,
                               ),
@@ -274,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: double.infinity,
                             child: Text(
                               "Password",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.darkGreen,
@@ -287,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             obscureText: _obsecureText,
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.darkGreen,
@@ -329,7 +354,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               hintText: "-------",
-                              hintStyle: TextStyle(
+                              hintStyle: GoogleFonts.outfit(
                                 color: AppColors.darkGreen,
                                 fontSize: 12,
                                 letterSpacing: 3,
@@ -357,7 +382,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Text(
                                 "Remember me",
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   color: AppColors.darkGreen,
                                   fontSize: 12,
                                 ),
@@ -367,7 +392,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onTap: () {},
                                 child: Text(
                                   "Forgot password?",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.darkGreen,
@@ -397,7 +422,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 children: [
                                   Text(
                                     "Login to ${AppStrings.logo}",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -408,21 +433,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           else
-                            Container(
-                              padding: EdgeInsets.all(7),
-                              decoration: BoxDecoration(
-                                color: AppColors.badgeBack,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(
-                                    color: AppColors.white,
-                                    strokeAlign: 0.1,
-                                    padding: EdgeInsets.zero,
+                            SizedBox(
+                              width: double.infinity,
+                              child: FilledButton(
+                                onPressed: null,
+                                style: FilledButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(vertical: 7),
+                                  backgroundColor: AppColors.darkGreen,
+                                  foregroundColor: AppColors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      8,
+                                    ),
                                   ),
-                                ],
+                                ),
+                                child: FlutterAnimatedLoader.horizontalSpin(
+                                  color: AppColors.darkGreen,
+                                  size: 35,
+                                ),
                               ),
                             ),
                           SizedBox(height: 25),
@@ -431,7 +459,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 "Don't have an account?",
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   color: AppColors.deepGreen,
                                   fontSize: 14,
                                 ),
@@ -443,7 +471,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 child: Text(
                                   "Sign Up",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.deepGreen,
@@ -465,7 +493,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               SizedBox(width: 5),
                               Text(
                                 "Official Dining Partner",
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   fontSize: 13,
                                   color: AppColors.deepGreen,
                                 ),

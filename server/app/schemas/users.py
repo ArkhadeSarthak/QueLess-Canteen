@@ -8,6 +8,8 @@ class UserResponse(BaseModel):
     role: str
     email: str
     profile_image: str | None = None
+    university: str
+    course: str
 
 
 class TokenResponce(BaseModel):
@@ -18,3 +20,9 @@ class TokenResponce(BaseModel):
     name: str
     roll_no: str
     email: str
+    
+    
+class UpdateUser(BaseModel):
+    name: str
+    email: str
+    profile_image: str | None = None

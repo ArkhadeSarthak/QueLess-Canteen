@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:queue_less/services/auth_services.dart';
+import 'package:queue_less/services/token_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:queue_less/theme/app_strings.dart';
 import 'package:flutter/material.dart';
@@ -40,10 +42,9 @@ class _SplashScreenState extends State<SplashScreen> {
   final AuthServices _authServices = AuthServices();
 
   Future<void> chechAuth() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("access_token");
     Timer(Duration(seconds: 2), () async {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString("access_token");
-
       if (token == null || token.isEmpty) {
         if (!mounted) return;
         _navigateToLogin();
@@ -56,8 +57,10 @@ class _SplashScreenState extends State<SplashScreen> {
       }
 
       try {
-        await _authServices.getCurrentUser();
+        final response = await _authServices.getCurrentUser();
         if (!mounted) return;
+
+        await saveUserJson(response);
 
         Navigator.pushReplacementNamed(context, "/home");
       } catch (e) {
@@ -112,7 +115,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     SizedBox(width: 10),
                     Text(
                       AppStrings.network,
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 13,
                         color: AppColors.white,
                         fontWeight: FontWeight.w700,
@@ -126,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 opacity: visible ? 1.0 : 0.0,
                 duration: Duration(milliseconds: 1000),
                 child: Image(
-                  image: AssetImage("assets/images/lightning_cloche.png"),
+                  image: AssetImage("assets/images/favicon.png"),
                   height: 150,
                   width: 150,
                   fit: BoxFit.cover,
@@ -143,8 +146,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   },
                   child: Text(
                     AppStrings.logo,
-                    style: TextStyle(
-                      fontSize: 40,
+                    style: GoogleFonts.dancingScript(
+                      fontSize: 55,
                       fontWeight: FontWeight.w900,
                       color: AppColors.white,
                     ),
@@ -169,7 +172,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     SizedBox(width: 10),
                     Text(
                       AppStrings.dining,
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 14,
                         color: AppColors.secondaryText,
                         fontWeight: FontWeight.w700,
@@ -182,7 +185,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Text(
                 "${AppStrings.skipQueue} \n${AppStrings.hotMeal}",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.white, fontSize: 17),
+                style: GoogleFonts.outfit(color: AppColors.white, fontSize: 17),
               ),
               SizedBox(height: 25),
               Row(
@@ -205,7 +208,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         SizedBox(width: 5),
                         Text(
                           "Digital Token",
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 14,
                             color: AppColors.white,
                             fontWeight: FontWeight.w700,
@@ -231,7 +234,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         SizedBox(width: 5),
                         Text(
                           AppStrings.eta,
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 14,
                             color: AppColors.white,
                             fontWeight: FontWeight.w700,
@@ -262,7 +265,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 children: [
                   Text(
                     AppStrings.locating,
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       color: AppColors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -283,7 +286,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   SizedBox(width: 5),
                   Text(
                     AppStrings.powerings,
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       color: AppColors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modern_animated_loader/flutter_animated_loader.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:queue_less/models/food_items_model.dart';
 import 'package:queue_less/services/food_services.dart';
@@ -87,6 +88,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
 
     try {
       final url = Uri.parse("https://queueless-canteen-rho.vercel.app/images/upload");
+      // final url = Uri.parse("http://10.0.2.2:8000/images/upload");
       final request = http.MultipartRequest("POST", url);
 
       request.files.add(
@@ -253,7 +255,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                             SizedBox(width: 5),
                             Text(
                               "Live on Menu",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: AppColors.darkGreen,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -287,7 +289,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                               SizedBox(width: 5),
                               Text(
                                 "Delete Item",
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   color: AppColors.red,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -319,7 +321,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                             SizedBox(width: 10),
                             Text(
                               "Dish Photography",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.black,
@@ -328,7 +330,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                             Spacer(),
                             Text(
                               "JPG, PNG • Max 5MB",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: AppColors.darkGreen,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -414,7 +416,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                                           SizedBox(width: 5),
                                           Text(
                                             "Upload Photo",
-                                            style: TextStyle(
+                                            style: GoogleFonts.outfit(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -471,7 +473,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                             SizedBox(width: 10),
                             Text(
                               "Item Details",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.black,
@@ -485,7 +487,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                           children: [
                             Text(
                               "Food Item Name *",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: AppColors.black.withValues(alpha: 0.8),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -494,7 +496,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                             Spacer(),
                             Text(
                               "$_nameLength/60",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 fontSize: 15,
                                 color: AppColors.darkGreen,
                               ),
@@ -504,7 +506,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                         TextFormField(
                           controller: _nameController,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             color: AppColors.black,
                             fontSize: 16,
                           ),
@@ -555,7 +557,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             hintText: "Food Name",
-                            hintStyle: TextStyle(
+                            hintStyle: GoogleFonts.outfit(
                               color: AppColors.badgeBack,
                               fontSize: 16,
                             ),
@@ -576,7 +578,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                           children: [
                             Text(
                               "Short Description",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: AppColors.black.withValues(alpha: 0.8),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -585,7 +587,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                             Spacer(),
                             Text(
                               "$_descLength/150",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 fontSize: 15,
                                 color: AppColors.darkGreen,
                               ),
@@ -598,7 +600,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                             controller: _descriptionController,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                               color: AppColors.black,
                               fontSize: 16,
                             ),
@@ -649,7 +651,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               hintText: "Write Description",
-                              hintStyle: TextStyle(
+                              hintStyle: GoogleFonts.outfit(
                                 color: AppColors.badgeBack,
                                 fontSize: 16,
                               ),
@@ -669,7 +671,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                         SizedBox(height: 15),
                         Text(
                           "Menu Category",
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             color: AppColors.black.withValues(alpha: 0.8),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -705,7 +707,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                                       SizedBox(width: 5),
                                       Text(
                                         categories[i]["text"],
-                                        style: TextStyle(
+                                        style: GoogleFonts.outfit(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -720,7 +722,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                         SizedBox(height: 15),
                         Text(
                           "Base Price (INR) *",
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             color: AppColors.black.withValues(alpha: 0.8),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -737,7 +739,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                               RegExp(r'^\d*\.?\d{0,2}'),
                             ),
                           ],
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             color: AppColors.black,
                             fontSize: 16,
                           ),
@@ -781,7 +783,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             hintText: "Food Name",
-                            hintStyle: TextStyle(
+                            hintStyle: GoogleFonts.outfit(
                               color: AppColors.badgeBack,
                               fontSize: 16,
                             ),
@@ -790,7 +792,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                               heightFactor: 1.0,
                               child: Text(
                                 '₹',
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.darkGreen,
@@ -833,7 +835,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                           ),
                           child: Text(
                             "Cancel",
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -874,7 +876,7 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
                                     children: [
                                       Text(
                                         "Save changes",
-                                        style: TextStyle(
+                                        style: GoogleFonts.outfit(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),

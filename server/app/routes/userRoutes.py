@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 from app.models.userModel import User
 from app.core.database import get_db
-from app.schemas.users import UserResponse
+from app.schemas.users import UserResponse, UpdateUser
 from app.services import users as user_serives
 from app.core.security import get_current_user
 
@@ -54,4 +54,23 @@ def get_user_by_id(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred while fetching user: {str(e)}",
+        )
+
+
+@router.put("/{id}", status_code=status.HTTP_200_OK, summary="Updates existing user")
+def update_user(
+    id: str,
+    user: UpdateUser,
+    db: Session = Depends(get_db),
+):
+    try:
+        return user_serives.update_user(db, user, id)
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred during updating user : {str(e)}",
         )

@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:queue_less/features/profile_image.dart';
 import 'package:queue_less/features/top_bar.dart';
 import 'package:queue_less/theme/app_colors.dart';
@@ -46,7 +47,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       children: [
                         Text(
                           "My Orders",
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
                             color: AppColors.black,
@@ -97,7 +98,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               children: [
                                 Text(
                                   "All",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -138,7 +139,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               children: [
                                 Text(
                                   "Active",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -179,7 +180,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               children: [
                                 Text(
                                   "Completed",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -263,7 +264,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         SizedBox(width: 5),
                                         Text(
                                           "LIVE IN PROGRESS",
-                                          style: TextStyle(
+                                          style: GoogleFonts.outfit(
                                             color: AppColors.darkGreen,
                                             fontSize: 15,
                                             fontWeight: FontWeight.w600,
@@ -294,7 +295,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         SizedBox(width: 5),
                                         Text(
                                           "Preparing (~12 mins)",
-                                          style: TextStyle(
+                                          style: GoogleFonts.outfit(
                                             color: AppColors.redOrange,
                                             fontSize: 15,
                                             fontWeight: FontWeight.w600,
@@ -323,7 +324,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     children: [
                                       Text(
                                         "Pickup Token",
-                                        style: TextStyle(
+                                        style: GoogleFonts.outfit(
                                           fontSize: 16,
                                           color: AppColors.darkGreen,
                                           fontWeight: FontWeight.w600,
@@ -331,7 +332,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       ),
                                       Text(
                                         "Q-023",
-                                        style: TextStyle(
+                                        style: GoogleFonts.outfit(
                                           color: AppColors.deepGreen,
                                           fontSize: 26,
                                           fontWeight: FontWeight.w900,
@@ -345,7 +346,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     children: [
                                       Text(
                                         "Order ID",
-                                        style: TextStyle(
+                                        style: GoogleFonts.outfit(
                                           fontSize: 16,
                                           color: AppColors.darkGreen,
                                           fontWeight: FontWeight.w600,
@@ -353,7 +354,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       ),
                                       Text(
                                         "#102",
-                                        style: TextStyle(
+                                        style: GoogleFonts.outfit(
                                           fontSize: 18,
                                           color: AppColors.black,
                                           fontWeight: FontWeight.w600,
@@ -385,7 +386,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   children: [
                                     Text(
                                       "1x Paneer Kathi Roll",
-                                      style: TextStyle(
+                                      style: GoogleFonts.outfit(
                                         fontSize: 18,
                                         color: AppColors.black,
                                         fontWeight: FontWeight.w600,
@@ -393,7 +394,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     ),
                                     Text(
                                       "1x Classic Cold Coffee",
-                                      style: TextStyle(
+                                      style: GoogleFonts.outfit(
                                         fontSize: 16,
                                         color: AppColors.darkGreen,
                                       ),
@@ -421,7 +422,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   SizedBox(width: 10),
                                   Text(
                                     "Main Engg. Canteen",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       color: AppColors.darkGreen,
                                       fontSize: 16,
                                     ),
@@ -435,7 +436,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   SizedBox(width: 5),
                                   Text(
                                     "Counter 2",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       color: AppColors.darkGreen,
                                       fontSize: 16,
                                     ),
@@ -448,7 +449,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               children: [
                                 Text(
                                   "170",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     color: AppColors.black,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -468,7 +469,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   ),
                                   child: Text(
                                     "Pay at Counter",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       color: AppColors.redOrange,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -478,7 +479,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 Spacer(),
                                 Text(
                                   "2 items total",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 14,
                                     color: AppColors.black,
                                   ),
@@ -508,7 +509,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   SizedBox(width: 5),
                                   Text(
                                     "Track Live Status",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -526,7 +527,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       children: [
                         Text(
                           "Order History",
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: AppColors.black,
@@ -535,7 +536,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         Spacer(),
                         Text(
                           "Past Campus Meals",
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 16,
                             color: AppColors.darkGreen,
                           ),

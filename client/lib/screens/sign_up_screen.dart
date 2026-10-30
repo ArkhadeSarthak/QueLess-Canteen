@@ -1,3 +1,5 @@
+import 'package:flutter_modern_animated_loader/flutter_animated_loader.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:queue_less/services/auth_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:queue_less/theme/app_strings.dart';
@@ -98,11 +100,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 20),
+                  Image(
+                    image: AssetImage("assets/images/skip_wait.png"),
+                    height: 120,
+                    width: 120,
+                    fit: BoxFit.cover,
+                  ),
                   Row(
                     children: [
                       Text(
                         "Create your account",
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           color: AppColors.black,
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
@@ -116,7 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     child: Text(
                       "Join ${AppStrings.logo} to order food ahead and collect with zero wating between lectures.",
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         color: AppColors.darkGreen,
                         fontSize: 14,
                       ),
@@ -127,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     child: Text(
                       "Full Name",
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.darkGreen,
@@ -139,7 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: _nameController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     onChanged: (value) => _checkIsDisabled(),
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.darkGreen,
@@ -169,7 +177,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         size: 18,
                       ),
                       hintText: "Student Name",
-                      hintStyle: TextStyle(
+                      hintStyle: GoogleFonts.outfit(
                         color: AppColors.darkGreen,
                         fontSize: 12,
                       ),
@@ -186,7 +194,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Text(
                         "Student Email Id",
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: AppColors.darkGreen,
@@ -201,7 +209,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(width: 5),
                       Text(
                         "Verified Domain",
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           color: AppColors.secondaryGreen,
                           fontSize: 11,
                         ),
@@ -213,7 +221,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: _emailController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     onChanged: (value) => _checkIsDisabled(),
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.darkGreen,
@@ -243,7 +251,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         size: 18,
                       ),
                       hintText: "student@college.edu",
-                      hintStyle: TextStyle(
+                      hintStyle: GoogleFonts.outfit(
                         color: AppColors.darkGreen,
                         fontSize: 12,
                       ),
@@ -263,7 +271,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     child: Text(
                       "College Roll No / ID",
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.darkGreen,
@@ -275,7 +283,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: _idController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     onChanged: (value) => _checkIsDisabled(),
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.darkGreen,
@@ -305,7 +313,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         size: 18,
                       ),
                       hintText: "student@college.edu",
-                      hintStyle: TextStyle(
+                      hintStyle: GoogleFonts.outfit(
                         color: AppColors.darkGreen,
                         fontSize: 12,
                       ),
@@ -322,7 +330,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     child: Text(
                       "Create Password",
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.darkGreen,
@@ -338,7 +346,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       _checkIsMatched();
                       _checkIsDisabled();
                     },
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.darkGreen,
@@ -378,7 +386,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                       hintText: "Pass@123",
-                      hintStyle: TextStyle(
+                      hintStyle: GoogleFonts.outfit(
                         color: AppColors.darkGreen,
                         fontSize: 12,
                       ),
@@ -404,7 +412,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     child: Text(
                       "Confirm Password",
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.darkGreen,
@@ -420,7 +428,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       _checkIsMatched();
                       _checkIsDisabled();
                     },
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.darkGreen,
@@ -455,7 +463,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         size: 18,
                       ),
                       hintText: "Pass@123",
-                      hintStyle: TextStyle(
+                      hintStyle: GoogleFonts.outfit(
                         color: AppColors.darkGreen,
                         fontSize: 12,
                       ),
@@ -491,7 +499,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       Text(
                         "I agree to the Campus Dining Terms and \nacknowledge the Privacy Policy.",
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           color: AppColors.darkGreen,
                           fontSize: 12,
                         ),
@@ -521,7 +529,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           Text(
                             "Create ${AppStrings.logo} Account",
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                             ),
@@ -532,21 +540,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     )
                   else
-                    Container(
-                      padding: EdgeInsets.all(7),
-                      decoration: BoxDecoration(
-                        color: AppColors.badgeBack,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            color: AppColors.white,
-                            strokeAlign: 0.1,
-                            padding: EdgeInsets.zero,
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: null,
+                        style: FilledButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 7),
+                          backgroundColor: AppColors.darkGreen,
+                          foregroundColor: AppColors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(8),
                           ),
-                        ],
+                        ),
+                        child: FlutterAnimatedLoader.horizontalSpin(
+                          color: AppColors.darkGreen,
+                          size: 35,
+                        ),
                       ),
                     ),
                   SizedBox(height: 25),
@@ -555,7 +564,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Text(
                         "Already have an account",
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           color: AppColors.deepGreen,
                           fontSize: 14,
                         ),
@@ -567,7 +576,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                         child: Text(
                           "Sign In",
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: AppColors.deepGreen,

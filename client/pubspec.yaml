@@ -2,7 +2,7 @@ name: queue_less
 description: "This is a QueueLess Canteen project's client side application"
 publish_to: 'none' 
 
-version: 1.0.1
+version: 1.0.2
 
 environment:
   sdk: ^3.10.0-290.4.beta
@@ -19,6 +19,8 @@ dependencies:
   flutter_dotenv: ^6.0.1
   image_picker: ^1.2.2
   internet_connection_checker_plus: ^3.1.2
+  google_fonts: ^8.1.0
+  lottie: ^3.3.3
 
 dev_dependencies:
   flutter_test:

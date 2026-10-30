@@ -92,5 +92,5 @@ def update_food_item(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred during creating an item : {str(e)}",
+            detail=f"An unexpected error occurred during updating an item : {str(e)}",
         )

@@ -14,7 +14,9 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     roll_no = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
-    profile_image = Column(String)
+    university = Column(String, nullable=False, default="University")
+    course = Column(String, nullable=False, default="Course")
+    profile_image = Column(String, nullable=True)
     role = Column(
         Enum("student", "chief", "administrator", name="user_role"),
         nullable=False,
