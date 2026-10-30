@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices {
   static String baseURL = "https://queueless-canteen-rho.vercel.app/auth";
+  // static String baseURL = "http://10.0.2.2:8000/auth";
 
   Future<void> loginUser({
     required BuildContext context,
@@ -21,7 +22,9 @@ class AuthServices {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      saveToken(data["access_token"]);
+      await saveToken(data["access_token"]);
+      final userData = await getCurrentUser();
+      await saveUserJson(userData);
       if (!context.mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -96,11 +99,7 @@ class AuthServices {
           backgroundColor: AppColors.lightGreen,
         ),
       );
-      loginUser(
-        context: context,
-        email: email,
-        password: password,
-      );
+      loginUser(context: context, email: email, password: password);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

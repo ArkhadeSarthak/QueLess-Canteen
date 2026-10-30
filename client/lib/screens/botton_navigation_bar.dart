@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:queue_less/screens/home_screen.dart';
 import 'package:queue_less/screens/menu_screen.dart';
 import 'package:queue_less/screens/orders_screen.dart';
@@ -16,8 +17,14 @@ class BottonNavigationBar extends StatefulWidget {
 class _BottonNavigationBarState extends State<BottonNavigationBar> {
   int _currentIndex = 0;
 
-  List<Widget> pages = [
-    HomeScreen(),
+  void setCurrentIndex(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  late final List<Widget> pages = [
+    HomeScreen(navigate: setCurrentIndex),
     MenuScreen(),
     OrdersScreen(),
     ProfileScreen(),
@@ -39,24 +46,30 @@ class _BottonNavigationBarState extends State<BottonNavigationBar> {
         items: [
           SalomonBottomBarItem(
             icon: Icon(Icons.home_outlined),
-            title: Text("Home", style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(
+              "Home",
+              style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+            ),
           ),
           SalomonBottomBarItem(
             icon: Icon(Icons.restaurant_menu),
-            title: Text("Menu", style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(
+              "Menu",
+              style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+            ),
           ),
           SalomonBottomBarItem(
             icon: Icon(Icons.receipt_long_outlined),
             title: Text(
               "Orders",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
             ),
           ),
           SalomonBottomBarItem(
             icon: Icon(Icons.person_outlined),
             title: Text(
               "Profile",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
             ),
           ),
         ],

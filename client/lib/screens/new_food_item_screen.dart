@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:queue_less/models/food_items_model.dart';
 import 'package:queue_less/services/food_services.dart';
@@ -67,6 +68,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
 
     try {
       final url = Uri.parse("https://queueless-canteen-rho.vercel.app/images/upload");
+      // final url = Uri.parse("http://10.0.2.2:8000/images/upload");
       final request = http.MultipartRequest("POST", url);
 
       request.files.add(
@@ -201,7 +203,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
               ),
               child: Text(
                 "Cancel",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(width: 15),
@@ -237,7 +239,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                         children: [
                           Text(
                             "Publish to Menu",
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -264,7 +266,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                     children: [
                       Text(
                         "Add New Dish",
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: AppColors.black,
@@ -272,7 +274,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                       ),
                       Text(
                         "Update collegiate cafeteria live ordering stream",
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 16,
                           color: AppColors.darkGreen,
                           fontWeight: FontWeight.w500,
@@ -298,7 +300,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                 SizedBox(width: 10),
                                 Text(
                                   "Dish Photography",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.black,
@@ -307,7 +309,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                 Spacer(),
                                 Text(
                                   "JPG, PNG • Max 5MB",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     color: AppColors.darkGreen,
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
@@ -353,14 +355,14 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                   SizedBox(height: 10),
                                   Text(
                                     "Capture or Replace Photo",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       color: AppColors.black,
                                       fontSize: 18,
                                     ),
                                   ),
                                   Text(
                                     "Vivid student menu photos increase orders by 38% during rush hours.",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       fontSize: 14,
                                       color: AppColors.darkGreen,
                                     ),
@@ -395,7 +397,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                               SizedBox(width: 5),
                                               Text(
                                                 "Upload Photo",
-                                                style: TextStyle(
+                                                style: GoogleFonts.outfit(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -454,7 +456,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                 SizedBox(width: 10),
                                 Text(
                                   "Item Details",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.black,
@@ -468,7 +470,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                               children: [
                                 Text(
                                   "Food Item Name *",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     color: AppColors.deepGreen,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -477,7 +479,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                 Spacer(),
                                 Text(
                                   "$_nameLength/60",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 15,
                                     color: AppColors.darkGreen,
                                   ),
@@ -488,7 +490,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                               controller: _nameController,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: AppColors.black,
                                 fontSize: 16,
                               ),
@@ -539,7 +541,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 hintText: "Food Name",
-                                hintStyle: TextStyle(
+                                hintStyle: GoogleFonts.outfit(
                                   color: AppColors.badgeBack,
                                   fontSize: 16,
                                 ),
@@ -560,7 +562,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                               children: [
                                 Text(
                                   "Short Description (Displays in Menu Feed)",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     color: AppColors.deepGreen,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -569,7 +571,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                 Spacer(),
                                 Text(
                                   "$_descLength/150",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 15,
                                     color: AppColors.darkGreen,
                                   ),
@@ -582,7 +584,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                 controller: _descriptionController,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   color: AppColors.black,
                                   fontSize: 16,
                                 ),
@@ -633,7 +635,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   hintText: "Write Description",
-                                  hintStyle: TextStyle(
+                                  hintStyle: GoogleFonts.outfit(
                                     color: AppColors.badgeBack,
                                     fontSize: 16,
                                   ),
@@ -653,7 +655,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                             SizedBox(height: 15),
                             Text(
                               "Category Assignment",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: AppColors.deepGreen,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -694,7 +696,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                           SizedBox(width: 5),
                                           Text(
                                             categories[i]["text"],
-                                            style: TextStyle(
+                                            style: GoogleFonts.outfit(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -709,7 +711,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                             SizedBox(height: 15),
                             Text(
                               "Base Price (INR) *",
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: AppColors.deepGreen,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -727,7 +729,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                   RegExp(r'^\d*\.?\d{0,2}'),
                                 ),
                               ],
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: AppColors.black,
                                 fontSize: 16,
                               ),
@@ -771,7 +773,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 hintText: "Food Name",
-                                hintStyle: TextStyle(
+                                hintStyle: GoogleFonts.outfit(
                                   color: AppColors.badgeBack,
                                   fontSize: 16,
                                 ),
@@ -780,7 +782,7 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                   heightFactor: 1.0,
                                   child: Text(
                                     '₹',
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.darkGreen,

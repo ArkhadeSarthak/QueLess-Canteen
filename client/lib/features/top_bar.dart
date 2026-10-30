@@ -1,4 +1,6 @@
-import 'package:queue_less/services/auth_services.dart';
+// import 'package:queue_less/services/auth_services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:queue_less/services/token_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:queue_less/theme/app_strings.dart';
 import 'package:flutter/material.dart';
@@ -13,39 +15,13 @@ class TopBar extends StatefulWidget {
 }
 
 class _TopBarState extends State<TopBar> {
-  final AuthServices _authServices = AuthServices();
   Map<String, dynamic>? user;
-  bool isLoading = false;
 
   Future<void> getMe() async {
-    if (user != null || isLoading) return;
+    Map<String, dynamic>? userJson = await getUserJson();
     setState(() {
-      isLoading = true;
+      user = userJson;
     });
-    try {
-      final response = await _authServices.getCurrentUser();
-
-      if (!mounted) return;
-
-      setState(() {
-        user = response;
-      });
-    } catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Error fetching user: $e"),
-          backgroundColor: AppColors.redOrange,
-        ),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
   }
 
   @override
@@ -65,12 +41,19 @@ class _TopBarState extends State<TopBar> {
           fit: BoxFit.cover,
         ),
         SizedBox(width: 10),
-        Text(
-          AppStrings.logo,
-          style: TextStyle(
-            color: AppColors.lightGreen,
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
+        ShaderMask(
+          shaderCallback: (bounds) {
+            return LinearGradient(
+              colors: [AppColors.black, AppColors.lightGreen, AppColors.green],
+            ).createShader(bounds);
+          },
+          child: Text(
+            AppStrings.logo,
+            style: GoogleFonts.dancingScript(
+              fontSize: 24,
+              fontWeight: FontWeight.w900,
+              color: AppColors.white,
+            ),
           ),
         ),
         Spacer(),
@@ -98,7 +81,7 @@ class _TopBarState extends State<TopBar> {
                     child: Center(
                       child: Text(
                         user?["name"].substring(0, 1) ?? "",
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           color: AppColors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,

@@ -1,14 +1,17 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:queue_less/features/profile_image.dart';
 import 'package:queue_less/features/top_bar.dart';
 import 'package:queue_less/features/update_food_item.dart';
 import 'package:queue_less/models/food_items_model.dart';
-import 'package:queue_less/services/auth_services.dart';
 import 'package:queue_less/services/food_services.dart';
+import 'package:queue_less/services/token_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(int) navigate;
+  const HomeScreen({super.key, required this.navigate});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -16,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final AuthServices _authServices = AuthServices();
   List<Map<String, dynamic>> categories = [
     {"id": 1, "icon": Icons.stars, "text": "All"},
     {"id": 2, "icon": Icons.cookie_outlined, "text": "Snacks"},
@@ -47,38 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isAdministrator = false;
 
   Future<void> getMe() async {
-    if (user != null || isLoading) return;
+    Map<String, dynamic>? userJson = await getUserJson();
     setState(() {
-      isLoading = true;
+      user = userJson;
+      _isChief = userJson?["role"]?.toString().toLowerCase() == "chief";
+      _isStudent = userJson?["role"]?.toString().toLowerCase() == "student";
+      _isAdministrator =
+          userJson?["role"]?.toString().toLowerCase() == "administrator";
     });
-    try {
-      final response = await _authServices.getCurrentUser();
-
-      if (!mounted) return;
-
-      setState(() {
-        user = response;
-        _isChief = user?["role"]?.toString().toLowerCase() == "chief";
-        _isStudent = user?["role"]?.toString().toLowerCase() == "student";
-        _isAdministrator =
-            user?["role"]?.toString().toLowerCase() == "administrator";
-      });
-    } catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Error fetching user: $e"),
-          backgroundColor: AppColors.redOrange,
-        ),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
   }
 
   final FoodServices _foodServices = FoodServices();
@@ -145,19 +123,33 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TopBar(zoomIn: zoomIn, zoomOut: zoomOut),
-                          SizedBox(height: 20),
+                          SizedBox(height: 10),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(
-                                "Hey, ${user?["name"].toString().split(" ").first ?? "User"}!",
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.black,
+                              ShaderMask(
+                                shaderCallback: (bounds) {
+                                  return LinearGradient(
+                                    colors: [
+                                      AppColors.black,
+                                      AppColors.lightGreen,
+                                      AppColors.green,
+                                    ],
+                                  ).createShader(bounds);
+                                },
+                                child: Text(
+                                  "Hey, ${user?["name"].toString().split(" ").first ?? "User"} !",
+                                  style: GoogleFonts.josefinSans(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.white,
+                                  ),
                                 ),
                               ),
-                              SizedBox(width: 5),
-                              Text("🖐️", style: TextStyle(fontSize: 22)),
+                              LottieBuilder.network(
+                                "https://lottie.host/9c383d30-1675-44bb-ab3b-c8fb917461b7/TX0T983LII.json",
+                                height: 45,
+                              ),
                               Spacer(),
                               Container(
                                 padding: EdgeInsets.symmetric(
@@ -180,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     SizedBox(width: 5),
                                     Text(
                                       "Main Caferia",
-                                      style: TextStyle(
+                                      style: GoogleFonts.outfit(
                                         color: AppColors.darkGreen,
                                         fontSize: 15,
                                         fontWeight: FontWeight.w600,
@@ -193,14 +185,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Text(
                             "What are you craving between classes today",
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                               fontSize: 16,
                               color: AppColors.darkGreen,
                             ),
                           ),
                           SizedBox(height: 15),
                           TextFormField(
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.darkGreen,
@@ -213,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: AppColors.white,
+                              fillColor: AppColors.white.withValues(alpha: 0.7),
                               prefixIcon: Icon(
                                 Icons.search,
                                 color: AppColors.darkGreen,
@@ -223,28 +215,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                 icon: Icon(Icons.tune),
                               ),
                               hintText: "Search food, snacks or drinks",
-                              hintStyle: TextStyle(
+                              hintStyle: GoogleFonts.outfit(
                                 color: AppColors.darkGreen,
                                 fontSize: 14,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(color: AppColors.white),
                               ),
                               errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(color: AppColors.white),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(color: AppColors.white),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(color: AppColors.white),
                               ),
                               disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(color: AppColors.white),
                               ),
                             ),
@@ -275,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   SizedBox(width: 5),
                                   Text(
                                     "Add new food item",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -298,86 +290,91 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               child: Column(
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.badgeBack,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.contrast_outlined,
-                                          color: AppColors.white,
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "ACTIVE ORDER #102",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: AppColors.darkGreen,
-                                            ),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.badgeBack,
+                                            shape: BoxShape.circle,
                                           ),
-                                          Text(
-                                            "Token Q023",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w700,
-                                              color: AppColors.darkGreen,
-                                            ),
+                                          child: Icon(
+                                            Icons.contrast_outlined,
+                                            color: AppColors.white,
                                           ),
-                                        ],
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 3,
                                         ),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
-                                          color: AppColors.acentOrange
-                                              .withValues(alpha: 0.2),
-                                        ),
-                                        child: Row(
+                                        SizedBox(width: 15),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Icon(
-                                              Icons.circle,
-                                              color: AppColors.acentOrange,
-                                              size: 16,
-                                            ),
-                                            SizedBox(width: 5),
                                             Text(
-                                              "Preparing (~12m)",
-                                              style: TextStyle(
-                                                color: AppColors.redOrange,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600,
+                                              "ACTIVE ORDER #102",
+                                              style: GoogleFonts.outfit(
+                                                fontSize: 14,
+                                                color: AppColors.darkGreen,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Token Q023",
+                                              style: GoogleFonts.outfit(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.darkGreen,
                                               ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(width: 15),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 3,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
+                                            color: AppColors.acentOrange
+                                                .withValues(alpha: 0.2),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.circle,
+                                                color: AppColors.acentOrange,
+                                                size: 16,
+                                              ),
+                                              SizedBox(width: 5),
+                                              Text(
+                                                "Preparing (~12m)",
+                                                style: GoogleFonts.outfit(
+                                                  color: AppColors.redOrange,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(height: 10),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          widget.navigate(2);
+                                        },
                                         child: Row(
                                           children: [
                                             Text(
                                               "Track Live",
-                                              style: TextStyle(
+                                              style: GoogleFonts.outfit(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w700,
                                                 color: AppColors.darkGreen,
@@ -428,7 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         SizedBox(width: 5),
                                         Text(
                                           categories[i]["text"],
-                                          style: TextStyle(
+                                          style: GoogleFonts.outfit(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
                                           ),
@@ -445,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Text(
                                 "Popular Products",
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.black,
@@ -453,10 +450,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Spacer(),
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  widget.navigate(1);
+                                },
                                 child: Text(
                                   "See all",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
                                     color: AppColors.darkGreen,
@@ -542,7 +541,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Text(
                                     "2 items",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       color: AppColors.white,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
@@ -557,7 +556,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   SizedBox(width: 5),
                                   Text(
                                     "140",
-                                    style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       color: AppColors.white,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w700,
@@ -567,7 +566,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Text(
                                 "Estimated prep: 8 mins",
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   color: AppColors.white,
                                   fontSize: 14,
                                 ),
@@ -588,7 +587,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Text(
                                   "View Cart",
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -613,7 +612,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildLoadingView() {
-    return Center(child: CircularProgressIndicator(color: AppColors.deepGreen));
+    return SizedBox(
+      height: 100,
+      child: Center(
+        child: CircularProgressIndicator(color: AppColors.deepGreen),
+      ),
+    );
   }
 
   Widget _buildFoodItemsList(
@@ -673,7 +677,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Center(
                       child: Text(
                         "No image",
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 16,
                           color: AppColors.deepGreen,
                         ),
@@ -687,7 +691,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     foodItem.name,
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: AppColors.black,
@@ -695,96 +699,147 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Text(
                     foodItem.description,
-                    style: TextStyle(color: AppColors.darkGreen, fontSize: 16),
+                    style: GoogleFonts.outfit(
+                      color: AppColors.darkGreen,
+                      fontSize: 16,
+                    ),
                   ),
                   SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text(
-                        "${foodItem.price}",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.black,
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Text(
+                          "₹ ${foodItem.price}/-",
+                          style: GoogleFonts.outfit(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.black,
+                          ),
                         ),
-                      ),
-                      Spacer(),
-                      if (_isChief || _isAdministrator) ...[
-                        IconButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) => UpdateFoodItem(
-                                id: foodItem.id,
-                                imageUrl: foodItem.imageUrl,
-                                selectedCategory: foodItem.category,
-                                name: foodItem.name,
-                                description: foodItem.description,
-                                price: foodItem.price,
-                                deleteFoodItem: deleteFoodItem,
-                                foodItems: foodItems,
+                        SizedBox(width: 10),
+                        if (_isStudent || _isAdministrator)
+                          FilledButton(
+                            onPressed: () {},
+                            style: FilledButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 0,
+                                horizontal: 15,
                               ),
-                            );
-                          },
-                          style: IconButton.styleFrom(
-                            backgroundColor: AppColors.redOrange.withValues(
-                              alpha: 0.2,
+                              backgroundColor: AppColors.lightGreen,
+                              foregroundColor: AppColors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(10),
+                              ),
+                              minimumSize: Size(0, 32),
                             ),
-                            foregroundColor: AppColors.redOrange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(10),
-                            ),
-                            minimumSize: Size(20, 22),
-                          ),
-                          icon: Icon(Icons.edit),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            deleteFoodItem(foodItem.id, foodItems);
-                          },
-                          style: IconButton.styleFrom(
-                            backgroundColor: AppColors.red.withValues(
-                              alpha: 0.2,
-                            ),
-                            foregroundColor: AppColors.red,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(10),
-                            ),
-                            minimumSize: Size(20, 22),
-                          ),
-                          icon: Icon(Icons.delete_outline),
-                        ),
-                      ],
-                      if (_isStudent || _isAdministrator)
-                        FilledButton(
-                          onPressed: () {},
-                          style: FilledButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 0,
-                              horizontal: 15,
-                            ),
-                            backgroundColor: AppColors.lightGreen,
-                            foregroundColor: AppColors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(15),
-                            ),
-                            minimumSize: Size(0, 32),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.add, size: 18),
-                              SizedBox(width: 5),
-                              Text(
-                                "Add",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                            child: Row(
+                              children: [
+                                Icon(Icons.add, size: 18),
+                                SizedBox(width: 5),
+                                Text(
+                                  "Add",
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                    ],
+                        if (_isChief || _isAdministrator) ...[
+                          IconButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => UpdateFoodItem(
+                                  id: foodItem.id,
+                                  imageUrl: foodItem.imageUrl,
+                                  selectedCategory: foodItem.category,
+                                  name: foodItem.name,
+                                  description: foodItem.description,
+                                  price: foodItem.price,
+                                  deleteFoodItem: deleteFoodItem,
+                                  foodItems: foodItems,
+                                ),
+                              );
+                            },
+                            style: IconButton.styleFrom(
+                              backgroundColor: AppColors.redOrange.withValues(
+                                alpha: 0.2,
+                              ),
+                              foregroundColor: AppColors.redOrange,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(10),
+                              ),
+                              minimumSize: Size(20, 22),
+                            ),
+                            icon: Icon(Icons.edit),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    backgroundColor:
+                                        AppColors.secondaryBackground,
+                                    title: Text(
+                                      "Delete Food Item",
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.red,
+                                      ),
+                                    ),
+                                    content: Text(
+                                      "Are you sure you want to delete this item?",
+                                      style: GoogleFonts.outfit(
+                                        color: AppColors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          deleteFoodItem(
+                                            foodItem.id,
+                                            foodItems,
+                                          );
+                                        },
+                                        child: const Text(
+                                          "Delete",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            style: IconButton.styleFrom(
+                              backgroundColor: AppColors.red.withValues(
+                                alpha: 0.2,
+                              ),
+                              foregroundColor: AppColors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(10),
+                              ),
+                              minimumSize: Size(20, 22),
+                            ),
+                            icon: Icon(Icons.delete_outline),
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -808,7 +863,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               'Error: $error',
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.black, fontSize: 14),
+              style: GoogleFonts.outfit(color: Colors.black, fontSize: 14),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
@@ -833,7 +888,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Center(
         child: Text(
           "No Food Items Found",
-          style: TextStyle(fontSize: 16, color: AppColors.red),
+          style: GoogleFonts.outfit(fontSize: 16, color: AppColors.red),
         ),
       ),
     );
