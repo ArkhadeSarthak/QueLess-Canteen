@@ -2,7 +2,6 @@ import 'package:flutter_modern_animated_loader/flutter_animated_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:queue_less/services/auth_services.dart';
-// import 'package:queue_less/services/token_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:queue_less/theme/app_strings.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _obsecureText = true;
-  bool _isChecked = false;
+  // bool _isChecked = false;
   bool _isLoading = false;
 
   void changeObsecure() {
@@ -29,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
   final AuthServices _authServices = AuthServices();
+  final FocusNode _passwordFocus = FocusNode();
 
   Future<void> login() async {
     if (!await InternetConnection().hasInternetAccess) {
@@ -58,9 +58,15 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = false;
         });
       } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Internel server error : $e")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Internel server error : $e",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.redOrange,
+          ),
+        );
         setState(() {
           _isLoading = false;
         });
@@ -248,12 +254,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             controller: _emailController,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
+                            onFieldSubmitted: (value) => FocusScope.of(
+                              context,
+                            ).requestFocus(_passwordFocus),
                             style: GoogleFonts.outfit(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.darkGreen,
                             ),
                             decoration: InputDecoration(
+                              enabled: !_isLoading,
                               filled: true,
                               fillColor: AppColors.white,
                               isDense: true,
@@ -312,12 +322,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             obscureText: _obsecureText,
+                            focusNode: _passwordFocus,
                             style: GoogleFonts.outfit(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.darkGreen,
                             ),
+                            onFieldSubmitted: (value) => login(),
                             decoration: InputDecoration(
+                              enabled: !_isLoading,
                               filled: true,
                               fillColor: AppColors.white,
                               isDense: true,
@@ -367,26 +380,26 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 5),
+                          SizedBox(height: 20),
                           Row(
                             children: [
-                              Checkbox(
-                                value: _isChecked,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _isChecked = !_isChecked;
-                                  });
-                                },
-                                checkColor: AppColors.white,
-                                activeColor: AppColors.darkGreen,
-                              ),
-                              Text(
-                                "Remember me",
-                                style: GoogleFonts.outfit(
-                                  color: AppColors.darkGreen,
-                                  fontSize: 12,
-                                ),
-                              ),
+                              // Checkbox(
+                              //   value: _isChecked,
+                              //   onChanged: (value) {
+                              //     setState(() {
+                              //       _isChecked = !_isChecked;
+                              //     });
+                              //   },
+                              //   checkColor: AppColors.white,
+                              //   activeColor: AppColors.darkGreen,
+                              // ),
+                              // Text(
+                              //   "Remember me",
+                              //   style: GoogleFonts.outfit(
+                              //     color: AppColors.darkGreen,
+                              //     fontSize: 12,
+                              //   ),
+                              // ),
                               Spacer(),
                               InkWell(
                                 onTap: () {},

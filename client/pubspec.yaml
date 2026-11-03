@@ -21,6 +21,9 @@ dependencies:
   internet_connection_checker_plus: ^3.1.2
   google_fonts: ^8.1.0
   lottie: ^3.3.3
+  permission_handler: ^12.0.0
+  geolocator: ^14.0.2
+  geocoding: ^5.0.1
 
 dev_dependencies:
   flutter_test:

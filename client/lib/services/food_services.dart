@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:queue_less/models/food_items_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:queue_less/theme/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FoodServices {
@@ -23,6 +25,7 @@ class FoodServices {
   }
 
   Future<GetAllFoodItemsModel> createFoodItem({
+    required BuildContext context,
     required String name,
     required String description,
     required double price,
@@ -50,6 +53,19 @@ class FoodServices {
     if (response.statusCode == 201) {
       final dynamic data = jsonDecode(response.body);
       return GetAllFoodItemsModel.fromJson(data);
+    } else if (response.statusCode == 401) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "You cannot create food item",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      throw HttpException(
+        "You cannot create food item (Status Code: ${response.statusCode})",
+      );
     } else {
       throw HttpException(
         "Failed to create food item (Status Code: ${response.statusCode})",

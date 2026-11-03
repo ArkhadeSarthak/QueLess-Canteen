@@ -6,9 +6,7 @@ import 'package:queue_less/theme/app_strings.dart';
 import 'package:flutter/material.dart';
 
 class TopBar extends StatefulWidget {
-  final Function zoomIn;
-  final Function zoomOut;
-  const TopBar({super.key, required this.zoomIn, required this.zoomOut});
+  const TopBar({super.key});
 
   @override
   State<TopBar> createState() => _TopBarState();
@@ -63,9 +61,9 @@ class _TopBarState extends State<TopBar> {
         // ),
         SizedBox(width: 10),
         GestureDetector(
-          onTapDown: (details) => widget.zoomIn(),
-          onTapUp: (details) => widget.zoomOut(),
-          onTapCancel: () => widget.zoomOut(),
+          onTap: () {
+            Scaffold.of(context).openEndDrawer();
+          },
           child: ClipOval(
             child: user?["profile_image"] != null
                 ? Image(

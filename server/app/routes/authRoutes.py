@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, status
-from app.schemas.users import UserResponse, TokenResponce
+from app.schemas.users import UserResponse, TokenResponse
 from app.schemas.auth import UserSignUp, UserLogin
 from sqlalchemy.orm import Session
 from app.core.database import get_db
@@ -30,7 +30,7 @@ def signup_user(user: UserSignUp, db: Session = Depends(get_db)):
         )
 
 
-@router.post("/login", response_model=TokenResponce, summary="User Login (return JWT)")
+@router.post("/login", response_model=TokenResponse, summary="User Login (return JWT)")
 def login_user(user: UserLogin, db: Session = Depends(get_db)):
     try:
         return auth_services.login_user(db, user)

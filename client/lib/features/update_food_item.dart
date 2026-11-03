@@ -10,6 +10,7 @@ import 'package:queue_less/models/food_items_model.dart';
 import 'package:queue_less/services/food_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class UpdateFoodItem extends StatefulWidget {
   final int id;
@@ -74,10 +75,29 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
   String? uplodedImageUrl;
 
   Future<bool> _uploadImage() async {
+    if (!await InternetConnection().hasInternetAccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Not connected to internet",
+            style: GoogleFonts.outfit(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return false;
+    }
+
     if (_selectedImage == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Please select an image")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Please select an image",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
 
       return false;
     }
@@ -106,22 +126,40 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
           uplodedImageUrl = data["image_url"];
         });
 
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Image uploaded successfully!")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Image uploaded successfully!",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.lightGreen,
+          ),
+        );
         return true;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Upload failed: ${response.body}")),
+          SnackBar(
+            content: Text(
+              "Upload failed: ${response.body}",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.redOrange,
+          ),
         );
         return false;
       }
     } catch (e) {
       if (!mounted) return false;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error uploading image: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error uploading image: $e',
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
       return false;
     } finally {
       if (mounted) {
@@ -146,18 +184,42 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
   late Future<GetAllFoodItemsModel> foodItem;
 
   Future<void> updateFoodItem() async {
+    if (!await InternetConnection().hasInternetAccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Not connected to internet",
+            style: GoogleFonts.outfit(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return;
+    }
     if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Please fill all fields")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Please fill all fields",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
 
       return;
     }
 
     if (_selectedCategory == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Please select category")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Please select category",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
 
       return;
     }
@@ -187,16 +249,28 @@ class _UpdateFoodItemState extends State<UpdateFoodItem> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Food item updated successfully")),
+        const SnackBar(
+          content: Text(
+            "Food item updated successfully",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.lightGreen,
+        ),
       );
 
       Navigator.pop(context, updatedItem);
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Failed to update food item: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Failed to update food item: $e",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() {

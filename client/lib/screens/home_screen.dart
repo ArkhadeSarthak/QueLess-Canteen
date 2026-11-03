@@ -1,13 +1,16 @@
 import 'package:google_fonts/google_fonts.dart';
-import 'package:queue_less/features/profile_image.dart';
+import 'package:queue_less/features/sidebar.dart';
 import 'package:queue_less/features/top_bar.dart';
 import 'package:queue_less/features/update_food_item.dart';
 import 'package:queue_less/models/food_items_model.dart';
+import 'package:queue_less/screens/new_food_item_screen.dart';
 import 'package:queue_less/services/food_services.dart';
+import 'package:queue_less/services/permission_service.dart';
 import 'package:queue_less/services/token_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(int) navigate;
@@ -27,20 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   String _selectedCategory = "All";
 
-  bool _isZoomed = false;
-
-  void zoomIn() {
-    setState(() {
-      _isZoomed = true;
-    });
-  }
-
-  void zoomOut() {
-    setState(() {
-      _isZoomed = false;
-    });
-  }
-
   Map<String, dynamic>? user;
   bool isLoading = false;
 
@@ -57,12 +46,25 @@ class _HomeScreenState extends State<HomeScreen> {
       _isAdministrator =
           userJson?["role"]?.toString().toLowerCase() == "administrator";
     });
+    // PermissionService.requestAllPermissions();
   }
 
   final FoodServices _foodServices = FoodServices();
   late Future<List<GetAllFoodItemsModel>> foodItems;
 
   Future<void> featchFoodItems() async {
+    // if (!await InternetConnection().hasInternetAccess) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text(
+    //         "Not connected to internet",
+    //         style: GoogleFonts.outfit(color: AppColors.white),
+    //       ),
+    //       backgroundColor: AppColors.redOrange,
+    //     ),
+    //   );
+    //   return;
+    // }
     foodItems = _foodServices.featchFoodItems();
   }
 
@@ -72,6 +74,18 @@ class _HomeScreenState extends State<HomeScreen> {
     int id,
     List<GetAllFoodItemsModel> foodItems,
   ) async {
+    if (!await InternetConnection().hasInternetAccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Not connected to internet",
+            style: GoogleFonts.outfit(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return;
+    }
     try {
       await _foodServices.deleteFoodItem(id);
 
@@ -81,14 +95,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Food item deleted successfully")),
+          SnackBar(
+            content: Text(
+              "Food item deleted successfully",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.lightGreen,
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Error : $e")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Error : $e",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.redOrange,
+          ),
+        );
       }
     }
   }
@@ -104,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondaryBackground,
+      endDrawer: Sidebar(navigate: widget.navigate),
       body: SafeArea(
         child: Stack(
           children: [
@@ -122,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TopBar(zoomIn: zoomIn, zoomOut: zoomOut),
+                          TopBar(),
                           SizedBox(height: 10),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -151,36 +178,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 45,
                               ),
                               Spacer(),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 1,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: AppColors.subtitle.withValues(
-                                    alpha: 0.2,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on_outlined,
-                                      color: AppColors.darkGreen,
-                                      size: 16,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      "Main Caferia",
-                                      style: GoogleFonts.outfit(
-                                        color: AppColors.darkGreen,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              // Container(
+                              //   padding: EdgeInsets.symmetric(
+                              //     horizontal: 8,
+                              //     vertical: 1,
+                              //   ),
+                              //   decoration: BoxDecoration(
+                              //     borderRadius: BorderRadius.circular(15),
+                              //     color: AppColors.subtitle.withValues(
+                              //       alpha: 0.2,
+                              //     ),
+                              //   ),
+                              //   child: Row(
+                              //     children: [
+                              //       Icon(
+                              //         Icons.location_on_outlined,
+                              //         color: AppColors.darkGreen,
+                              //         size: 16,
+                              //       ),
+                              //       SizedBox(width: 5),
+                              //       Text(
+                              //         "Main Caferia",
+                              //         style: GoogleFonts.outfit(
+                              //           color: AppColors.darkGreen,
+                              //           fontSize: 15,
+                              //           fontWeight: FontWeight.w600,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                             ],
                           ),
                           Text(
@@ -244,8 +271,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (_isChief || _isAdministrator) ...[
                             SizedBox(height: 10),
                             FilledButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, "/new-item");
+                              onPressed: () async {
+                                // Navigator.pushNamed(context, "/new-item");
+                                final newItem = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NewFoodItemScreen(),
+                                  ),
+                                );
+
+                                if (newItem != null &&
+                                    newItem is GetAllFoodItemsModel) {
+                                  final items = await foodItems;
+                                  setState(() {
+                                    items.add(newItem);
+                                    foodItems = Future.value(items);
+                                  });
+                                }
                               },
                               style: FilledButton.styleFrom(
                                 padding: EdgeInsets.symmetric(
@@ -603,8 +645,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-
-            if (_isZoomed) ProfileImage(),
           ],
         ),
       ),
@@ -626,7 +666,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     final filteredItems = foodItems
         .where((foodItem) {
-          return foodItem.name.toLowerCase().contains(searchText.toLowerCase());
+          return foodItem.name.toLowerCase().contains(
+            searchText.trim().toLowerCase(),
+          );
         })
         .take(10)
         .toList();
@@ -689,13 +731,36 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    foodItem.name,
-                    style: GoogleFonts.outfit(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.black,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        foodItem.name,
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.black,
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 1,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: AppColors.subtitle.withValues(alpha: 0.2),
+                        ),
+                        child: Text(
+                          foodItem.category,
+                          style: GoogleFonts.outfit(
+                            color: AppColors.darkGreen,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Text(
                     foodItem.description,

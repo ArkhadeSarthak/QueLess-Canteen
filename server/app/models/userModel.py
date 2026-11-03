@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Enum, DateTime
+from sqlalchemy import Column, String, Enum, DateTime, Boolean
 from app.core.database import Base
 from datetime import datetime
 import uuid
@@ -26,3 +26,4 @@ class User(Base):
     updated_at = Column(
         DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
+    # is_active = Column(Boolean, nullable=False, default=False)

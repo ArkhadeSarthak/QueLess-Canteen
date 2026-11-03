@@ -9,6 +9,7 @@ import 'package:queue_less/services/food_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_modern_animated_loader/flutter_animated_loader.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class NewFoodItemScreen extends StatefulWidget {
   const NewFoodItemScreen({super.key});
@@ -54,10 +55,28 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
   String? imageUrl;
 
   Future<bool> _uploadImage() async {
+    if (!await InternetConnection().hasInternetAccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Not connected to internet",
+            style: GoogleFonts.outfit(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return false;
+    }
     if (_selectedImage == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Please select an image")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Please select an image",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
 
       return false;
     }
@@ -86,22 +105,40 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
           imageUrl = data["image_url"];
         });
 
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Image uploaded successfully!")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Image uploaded successfully!",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.lightGreen,
+          ),
+        );
         return true;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Upload failed: ${response.body}")),
+          SnackBar(
+            content: Text(
+              "Upload failed: ${response.body}",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.redOrange,
+          ),
         );
         return false;
       }
     } catch (e) {
       if (!mounted) return false;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error uploading image: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error uploading image: $e',
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
       return false;
     } finally {
       if (mounted) {
@@ -114,14 +151,32 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
   late Future<GetAllFoodItemsModel> foodItem;
 
   Future<void> createFoodItem() async {
+    if (!await InternetConnection().hasInternetAccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Not connected to internet",
+            style: GoogleFonts.outfit(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return;
+    }
     setState(() {
       _isUploading = true;
     });
 
     if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Please fill all fields")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Please fill all fields",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
       setState(() {
         _isUploading = false;
       });
@@ -129,9 +184,15 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
     }
 
     if (_selectedCategory == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Please select category")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Please select category",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
       setState(() {
         _isUploading = false;
       });
@@ -142,13 +203,27 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
       final bool uploaded = await _uploadImage();
       if (!uploaded) return;
 
-      foodItem = _foodServices.createFoodItem(
+      final foodItem = _foodServices.createFoodItem(
+        context: context,
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         price: double.tryParse(_priceController.text) ?? 0.0,
         category: _selectedCategory ?? "",
         imageUrl: imageUrl ?? "",
       );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Food item created successfully",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.lightGreen,
+          ),
+        );
+        Navigator.pop(context, foodItem);
+      }
 
       setState(() {
         _selectedImage = null;
@@ -160,9 +235,15 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Failed to create food item: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Failed to create food item: $e",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -203,7 +284,10 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
               ),
               child: Text(
                 "Cancel",
-                style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold),
+                style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SizedBox(width: 15),

@@ -29,8 +29,11 @@ class AuthServices {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(data["message"]),
-          backgroundColor: AppColors.white,
+          content: Text(
+            data["message"],
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.lightGreen,
         ),
       );
 
@@ -44,6 +47,7 @@ class AuthServices {
             response.statusCode == 401
                 ? "Invalid email or password"
                 : "Login failed. Please try again.",
+            style: TextStyle(color: AppColors.white),
           ),
           backgroundColor: AppColors.redOrange,
         ),
@@ -95,7 +99,10 @@ class AuthServices {
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Account created successfully"),
+          content: Text(
+            "Account created successfully",
+            style: TextStyle(color: AppColors.white),
+          ),
           backgroundColor: AppColors.lightGreen,
         ),
       );
@@ -105,6 +112,7 @@ class AuthServices {
         SnackBar(
           content: Text(
             "Can't create account (Status code : ${response.statusCode})",
+            style: TextStyle(color: AppColors.white),
           ),
           backgroundColor: AppColors.orange,
         ),

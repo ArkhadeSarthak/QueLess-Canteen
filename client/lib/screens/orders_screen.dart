@@ -1,5 +1,5 @@
 import 'package:google_fonts/google_fonts.dart';
-import 'package:queue_less/features/profile_image.dart';
+import 'package:queue_less/features/sidebar.dart';
 import 'package:queue_less/features/top_bar.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -12,26 +12,13 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  bool _isZoomed = false;
-
-  void zoomIn() {
-    setState(() {
-      _isZoomed = true;
-    });
-  }
-
-  void zoomOut() {
-    setState(() {
-      _isZoomed = false;
-    });
-  }
-
   String _selectedStatus = "All";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondaryBackground,
+      endDrawer: Sidebar(navigate: (_) {}),
       body: SafeArea(
         child: Stack(
           children: [
@@ -41,7 +28,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TopBar(zoomIn: zoomIn, zoomOut: zoomOut),
+                    TopBar(),
                     SizedBox(height: 20),
                     Row(
                       children: [
@@ -547,8 +534,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ),
               ),
             ),
-        
-            if (_isZoomed) ProfileImage(),
           ],
         ),
       ),

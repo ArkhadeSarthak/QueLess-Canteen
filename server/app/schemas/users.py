@@ -12,7 +12,7 @@ class UserResponse(BaseModel):
     course: str
 
 
-class TokenResponce(BaseModel):
+class TokenResponse(BaseModel):
     message: str
     access_token: str
     token_type: str = "bearer"
@@ -20,9 +20,19 @@ class TokenResponce(BaseModel):
     name: str
     roll_no: str
     email: str
-    
-    
+
+
 class UpdateUser(BaseModel):
     name: str
-    email: str
+    roll_no: str
+    university: str
+    course: str
+
+
+class UpdateProfileImage(BaseModel):
     profile_image: str | None = None
+
+
+class ChangePassword(BaseModel):
+    old_password: str
+    new_password: str
