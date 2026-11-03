@@ -1,9 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:queue_less/services/token_services.dart';
+import 'package:queue_less/services/user_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_modern_animated_loader/flutter_animated_loader.dart';
+import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +20,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final UserServices _userServices = UserServices();
   Future<void> logOut() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove("access_token");
@@ -35,8 +43,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _obsecureTextNew = true;
   bool _isMatched = false;
   bool _isPasswordChanging = false;
+  bool showProfileImage = false;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _rollNoController = TextEditingController();
+  final TextEditingController _courseController = TextEditingController();
+  final TextEditingController _universityController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -67,7 +78,318 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isEditing = true;
       _nameController.text = user?["name"];
       _rollNoController.text = user?["roll_no"];
+      _universityController.text = user?["university"];
+      _courseController.text = user?["course"];
     });
+  }
+
+  XFile? _selectedImage;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    setState(() {
+      isUploading = true;
+    });
+    final XFile? image = await _picker.pickImage(
+      source: source,
+      imageQuality: 85,
+    );
+
+    if (image == null || !mounted) return;
+
+    setState(() {
+      _selectedImage = image;
+      isUploading = false;
+    });
+  }
+
+  String? uplodedImageUrl;
+
+  Future<bool> _uploadImage() async {
+    if (!await InternetConnection().hasInternetAccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Not connected to internet",
+            style: GoogleFonts.outfit(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return false;
+    }
+    if (_selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Please select an image",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.lightGreen,
+        ),
+      );
+
+      return false;
+    }
+
+    setState(() {
+      isUploading = true;
+    });
+
+    try {
+      final url = Uri.parse("https://queueless-canteen-rho.vercel.app/images/upload");
+      // final url = Uri.parse("http://10.0.2.2:8000/images/upload");
+      final request = http.MultipartRequest("POST", url);
+
+      request.files.add(
+        await http.MultipartFile.fromPath("file", _selectedImage!.path),
+      );
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      if (!mounted) return false;
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        setState(() {
+          uplodedImageUrl = data["image_url"];
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Image uploaded successfully!",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.lightGreen,
+          ),
+        );
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Upload failed: ${response.body}",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.redOrange,
+          ),
+        );
+        return false;
+      }
+    } catch (e) {
+      if (!mounted) return false;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error uploading image: $e',
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return false;
+    } finally {
+      if (mounted) {
+        setState(() => isUploading = false);
+      }
+    }
+  }
+
+  Future<void> updateProfile() async {
+    if (!await InternetConnection().hasInternetAccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Not connected to internet",
+            style: GoogleFonts.outfit(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return;
+    }
+    setState(() {
+      isUploading = true;
+    });
+    if (_selectedImage != null) {
+      await _uploadImage();
+      _userServices.updateProfileImage(
+        context: context,
+        id: user?["id"],
+        imageUrl: uplodedImageUrl ?? user?["profile_image"],
+      );
+    }
+    if (_nameController.text.trim() != user?["name"] ||
+        _rollNoController.text.trim() != user?["roll_no"] ||
+        _universityController.text.trim() != user?["university"] ||
+        _courseController.text.trim() != user?["course"]) {
+      if (_formkey.currentState!.validate()) {
+        await _userServices.updateUser(
+          context: context,
+          id: user?["id"],
+          name: _nameController.text,
+          rollNo: _rollNoController.text,
+          university: _universityController.text,
+          course: _courseController.text,
+        );
+        setState(() {
+          user?["name"] = _nameController.text.trim();
+          user?["roll_no"] = _rollNoController.text.trim();
+          user?["university"] = _universityController.text.trim();
+          user?["course"] = _courseController.text.trim();
+        });
+        _formkey.currentState!.reset();
+      }
+    }
+    if (_isPasswordChanging) {
+      if (_isMatched) {
+        bool completed = await _userServices.changePassword(
+          context: context,
+          id: user?["id"],
+          oldPassword: _oldPasswordController.text.trim(),
+          newPassword: _passwordController.text.trim(),
+        );
+        if (completed) {
+          setState(() {
+            isEditing = false;
+            isUploading = false;
+            _isPasswordChanging = false;
+          });
+          _formkey.currentState!.reset();
+        } else {
+          setState(() {
+            isUploading = false;
+          });
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Confirm password does not match",
+              style: TextStyle(color: AppColors.white),
+            ),
+            backgroundColor: AppColors.orange,
+          ),
+        );
+        setState(() {
+          isUploading = false;
+        });
+      }
+    }
+    if (!_isPasswordChanging) {
+      setState(() {
+        isEditing = false;
+        isUploading = false;
+      });
+      _formkey.currentState!.reset();
+    }
+  }
+
+  Future<void> imageSourcePicker() async {
+    await showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsetsGeometry.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Choose Image Sourse",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 1.5,
+                      child: GestureDetector(
+                        onTap: () async {
+                          Navigator.pop(context);
+                          await _pickImage(ImageSource.gallery);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.lightGreen.withValues(alpha: 0.1),
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.photo_library,
+                                size: 35,
+                                color: AppColors.darkGreen,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Gallery",
+                                style: TextStyle(
+                                  color: AppColors.deepGreen,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 1.5,
+                      child: GestureDetector(
+                        onTap: () async {
+                          Navigator.pop(context);
+                          await _pickImage(ImageSource.camera);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.orange.withValues(alpha: 0.1),
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.camera_alt,
+                                size: 35,
+                                color: AppColors.darkGreen,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Camera",
+                                style: TextStyle(
+                                  color: AppColors.deepGreen,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -96,168 +418,224 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(15),
                         color: AppColors.white,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipOval(
-                                  child: user?["profile_image"] != null
-                                      ? Image(
-                                          image: NetworkImage(
-                                            user?["profile_image"],
-                                          ),
-                                          fit: BoxFit.cover,
-                                          height: 80,
-                                          width: 80,
-                                        )
-                                      : Container(
-                                          height: 80,
-                                          width: 80,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.badgeBack,
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              user?["name"].substring(0, 1) ??
-                                                  "",
-                                              style: GoogleFonts.outfit(
-                                                color: AppColors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 30,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Stack(
+                                    children: [
+                                      InkWell(
+                                        onTap: () => setState(
+                                          () => showProfileImage = true,
+                                        ),
+                                        child: ClipOval(
+                                          child: _selectedImage != null
+                                              ? Image.file(
+                                                  File(_selectedImage!.path),
+                                                  height: 80,
+                                                  width: 80,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : (user?["profile_image"] != null)
+                                              ? Image.network(
+                                                  user?["profile_image"],
+                                                  height: 80,
+                                                  width: 80,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder:
+                                                      (
+                                                        context,
+                                                        error,
+                                                        stackTrace,
+                                                      ) {
+                                                        return const Center(
+                                                          child: Text(
+                                                            "Failed to load image",
+                                                          ),
+                                                        );
+                                                      },
+                                                )
+                                              : Container(
+                                                  height: 80,
+                                                  width: 80,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.badgeBack,
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      user?["name"].substring(
+                                                            0,
+                                                            1,
+                                                          ) ??
+                                                          "",
+                                                      style: GoogleFonts.outfit(
+                                                        color: AppColors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 30,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                      if (isEditing)
+                                        Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: InkWell(
+                                            onTap: () {
+                                              imageSourcePicker();
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: AppColors
+                                                    .secondaryBackground,
+                                              ),
+                                              child: Icon(
+                                                Icons.camera_alt_outlined,
+                                                color: AppColors.darkGreen,
                                               ),
                                             ),
                                           ),
                                         ),
-                                ),
-                                SizedBox(width: 15),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
+                                    ],
+                                  ),
+                                  SizedBox(width: 15),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${user?["name"] ?? "User Name"}",
+                                            style: GoogleFonts.outfit(
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 24,
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Icon(
+                                            Icons.verified,
+                                            color: AppColors.darkGreen,
+                                            size: 26,
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        "${user?["email"] ?? "user.email@college.edu"}",
+                                        style: GoogleFonts.outfit(
+                                          color: AppColors.darkGreen,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      Text(
+                                        user?["university"] ??
+                                            "University xyz Active",
+                                        style: GoogleFonts.outfit(
+                                          color: AppColors.darkGreen,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 5),
+                                  if (!isEditing)
+                                    IconButton(
+                                      onPressed: () {
+                                        startEditing();
+                                      },
+                                      icon: Icon(
+                                        Icons.edit_outlined,
+                                        color: AppColors.darkGreen,
+                                        size: 28,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: AppColors.badgeBack.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                    ),
+                                    child: Row(
                                       children: [
+                                        Icon(
+                                          Icons.badge_outlined,
+                                          color: AppColors.black,
+                                          size: 20,
+                                        ),
+                                        SizedBox(width: 5),
                                         Text(
-                                          "${user?["name"] ?? "User Name"}",
+                                          "${user?["roll_no"] ?? "xyzabxxx"}",
                                           style: GoogleFonts.outfit(
                                             color: AppColors.black,
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 24,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
                                           ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Icon(
-                                          Icons.verified,
-                                          color: AppColors.darkGreen,
-                                          size: 26,
                                         ),
                                       ],
                                     ),
-                                    Text(
-                                      "${user?["email"] ?? "user.email@college.edu"}",
-                                      style: GoogleFonts.outfit(
-                                        color: AppColors.darkGreen,
-                                        fontSize: 15,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: AppColors.badgeBack.withValues(
+                                        alpha: 0.1,
                                       ),
                                     ),
-                                    Text(
-                                      user?["university"] ??
-                                          "University xyz Active",
-                                      style: GoogleFonts.outfit(
-                                        color: AppColors.darkGreen,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 5),
-                                if (!isEditing)
-                                  IconButton(
-                                    onPressed: () {
-                                      startEditing();
-                                    },
-                                    icon: Icon(
-                                      Icons.edit_outlined,
-                                      color: AppColors.darkGreen,
-                                      size: 28,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 3,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: AppColors.badgeBack.withValues(
-                                      alpha: 0.1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.badge_outlined,
-                                        color: AppColors.black,
-                                        size: 20,
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        "${user?["roll_no"] ?? "xyzabxxx"}",
-                                        style: GoogleFonts.outfit(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.apartment,
                                           color: AppColors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
+                                          size: 20,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 3,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: AppColors.badgeBack.withValues(
-                                      alpha: 0.1,
+                                        SizedBox(width: 5),
+                                        Text(
+                                          user?["course"] ?? "Course Name",
+                                          style: GoogleFonts.outfit(
+                                            color: AppColors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.apartment,
-                                        color: AppColors.black,
-                                        size: 20,
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        user?["course"] ?? "Course Name",
-                                        style: GoogleFonts.outfit(
-                                          color: AppColors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 15),
@@ -408,6 +786,146 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return "Please enter your roll no";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 15),
+                              Text(
+                                "University Name *",
+                                style: GoogleFonts.outfit(
+                                  color: AppColors.black.withValues(alpha: 0.8),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              TextFormField(
+                                controller: _universityController,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                style: GoogleFonts.outfit(
+                                  color: AppColors.black,
+                                  fontSize: 16,
+                                ),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.secondaryBackground,
+                                  isDense: true,
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  hintText: "Your university name",
+                                  hintStyle: GoogleFonts.outfit(
+                                    color: AppColors.badgeBack,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return "Please enter your university name";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 15),
+                              Text(
+                                "Course Name *",
+                                style: GoogleFonts.outfit(
+                                  color: AppColors.black.withValues(alpha: 0.8),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              TextFormField(
+                                controller: _courseController,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                style: GoogleFonts.outfit(
+                                  color: AppColors.black,
+                                  fontSize: 16,
+                                ),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.secondaryBackground,
+                                  isDense: true,
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.secondaryBackground,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  hintText: "Your course name",
+                                  hintStyle: GoogleFonts.outfit(
+                                    color: AppColors.badgeBack,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return "Please enter your course";
                                   }
                                   return null;
                                 },
@@ -712,7 +1230,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       size: 18,
                                     ),
                                     suffixIcon: Icon(
-                                      _isMatched ? Icons.check_circle : null,
+                                      _isMatched
+                                          ? Icons.verified_outlined
+                                          : null,
                                       color: AppColors.secondaryGreen,
                                       size: 18,
                                     ),
@@ -738,6 +1258,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       setState(() {
                                         isEditing = false;
                                         _isPasswordChanging = false;
+                                        isUploading = false;
+                                        _selectedImage = null;
                                       });
                                     },
                                     style: FilledButton.styleFrom(
@@ -780,7 +1302,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 ),
                                           )
                                         : FilledButton(
-                                            onPressed: () async {},
+                                            onPressed: () async {
+                                              updateProfile();
+                                            },
                                             style: FilledButton.styleFrom(
                                               backgroundColor:
                                                   AppColors.lightGreen,
@@ -1123,10 +1647,191 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 100),
                   ],
                 ),
               ),
             ),
+
+            if (showProfileImage)
+              Positioned.fill(
+                child: Container(
+                  color: AppColors.black.withValues(alpha: 0.4),
+                  child: Center(
+                    child: SafeArea(
+                      child: Container(
+                        margin: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondaryText,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                FilledButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      showProfileImage = false;
+                                    });
+                                  },
+                                  style: FilledButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 5,
+                                    ),
+                                    backgroundColor: AppColors.white,
+                                    foregroundColor: AppColors.red,
+                                    minimumSize: Size(0, 25),
+                                  ),
+                                  child: Text("Close"),
+                                ),
+                              ],
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadiusGeometry.circular(15),
+                              child: _selectedImage != null
+                                  ? Image.file(
+                                      File(_selectedImage!.path),
+                                      height: 300,
+                                      width: 300,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : (user?["profile_image"] != null)
+                                  ? Image.network(
+                                      user?["profile_image"],
+                                      height: 300,
+                                      width: 300,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return const Center(
+                                              child: Text(
+                                                "Failed to load image",
+                                              ),
+                                            );
+                                          },
+                                    )
+                                  : Container(
+                                      height: 300,
+                                      width: 300,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.badgeBack,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          user?["name"].substring(0, 1) ?? "U",
+                                          style: GoogleFonts.outfit(
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 30,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                            SizedBox(height: 10),
+                            if (isUploading)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FlutterAnimatedLoader.horizontalSpin(
+                                    color: AppColors.darkGreen,
+                                    size: 35,
+                                  ),
+                                ],
+                              )
+                            else
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (_selectedImage == null)
+                                    IconButton(
+                                      onPressed: () {
+                                        imageSourcePicker();
+                                      },
+                                      icon: Icon(
+                                        Icons.edit_outlined,
+                                        color: AppColors.darkGreen,
+                                        size: 30,
+                                      ),
+                                    )
+                                  else
+                                    IconButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          isUploading = true;
+                                        });
+                                        await _uploadImage();
+                                        await _userServices.updateProfileImage(
+                                          context: context,
+                                          id: user?["id"],
+                                          imageUrl:
+                                              uplodedImageUrl ??
+                                              user?["profile_image"],
+                                        );
+                                        setState(() {
+                                          showProfileImage = false;
+                                          user?["profile_image"] =
+                                              uplodedImageUrl;
+                                          _selectedImage = null;
+                                          isUploading = false;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.save_outlined,
+                                        color: AppColors.darkGreen,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  if (user?["profile_image"] != null ||
+                                      _selectedImage != null)
+                                    IconButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          isUploading = true;
+                                        });
+                                        if (_selectedImage == null &&
+                                            user?["profile_image"] != null) {
+                                          await _userServices
+                                              .updateProfileImage(
+                                                context: context,
+                                                id: user?["id"],
+                                                imageUrl: null,
+                                              );
+                                          setState(() {
+                                            _selectedImage = null;
+                                            user?["profile_image"] = null;
+                                            showProfileImage = false;
+                                            isUploading = false;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            _selectedImage = null;
+                                            showProfileImage = false;
+                                            isUploading = false;
+                                          });
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.delete_outline,
+                                        color: AppColors.red,
+                                        size: 30,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

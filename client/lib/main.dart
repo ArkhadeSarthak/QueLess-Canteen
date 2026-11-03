@@ -1,3 +1,4 @@
+import 'package:queue_less/screens/all_users_screen.dart';
 import 'package:queue_less/screens/botton_navigation_bar.dart';
 import 'package:queue_less/screens/login_screen.dart';
 import 'package:queue_less/screens/new_food_item_screen.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         "/signup": (context) => SignUpScreen(),
         "/home": (context) => BottonNavigationBar(),
         "/new-item": (context) => NewFoodItemScreen(),
+        "/all-users": (context) => AllUsersScreen(),
       },
     );
   }

@@ -5,8 +5,8 @@ from app.routes import authRoutes, userRoutes, foodRoutes, imageRoutes
 
 app = FastAPI(
     title="QueueLess Canteen Backend",
-    description="It is a app created for make communication of database with frontend",
-    version="1.0.0",
+    description="QueueLess Canteen Backend Application",
+    version="1.0.2",
 )
 
 

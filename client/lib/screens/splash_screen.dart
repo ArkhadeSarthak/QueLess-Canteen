@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> chechAuth() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("access_token");
-    Timer(Duration(seconds: 2), () async {
+    Timer(Duration(seconds: progess == 1 ? 0 : 2), () async {
       if (token == null || token.isEmpty) {
         if (!mounted) return;
         _navigateToLogin();

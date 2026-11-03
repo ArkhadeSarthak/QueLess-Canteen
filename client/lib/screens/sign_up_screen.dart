@@ -4,6 +4,7 @@ import 'package:queue_less/services/auth_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:queue_less/theme/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -67,6 +68,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isLoading = false;
   final AuthServices _authServices = AuthServices();
   Future<void> signUp() async {
+    if (!await InternetConnection().hasInternetAccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Not connected to internet",
+            style: GoogleFonts.outfit(color: AppColors.white),
+          ),
+          backgroundColor: AppColors.redOrange,
+        ),
+      );
+      return;
+    }
     setState(() {
       _isLoading = true;
     });

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 from app.models.userModel import User
 from app.core.database import get_db
-from app.schemas.users import UserResponse, UpdateUser
+from app.schemas.users import UserResponse, UpdateUser, UpdateProfileImage, ChangePassword
 from app.services import users as user_serives
 from app.core.security import get_current_user
 
@@ -62,7 +62,14 @@ def update_user(
     id: str,
     user: UpdateUser,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
+    if current_user.id != id and current_user.role != "administrator":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You can't update other user",
+        )
+
     try:
         return user_serives.update_user(db, user, id)
 
@@ -73,4 +80,64 @@ def update_user(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred during updating user : {str(e)}",
+        )
+
+
+@router.patch(
+    "/{id}/profile-image",
+    status_code=status.HTTP_200_OK,
+    summary="Update user profile image",
+)
+def update_profile_image(
+    id: str,
+    image_url: UpdateProfileImage,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.id != id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You can't update other user",
+        )
+
+    try:
+        return user_serives.update_profile_image(db, image_url, id)
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred during updating profile image : {str(e)}",
+        )
+
+
+@router.patch(
+    "/{id}/change-password",
+    status_code=status.HTTP_200_OK,
+    summary="Changes user password",
+)
+def change_password(
+    id: str,
+    password: ChangePassword,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.id != id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You can't update other user",
+        )
+
+    try:
+        return user_serives.change_user_password(db, password, id)
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred during updating profile image : {str(e)}",
         )

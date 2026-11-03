@@ -17,7 +17,7 @@ def create_food_item(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    if current_user.role != "chief":
+    if current_user.role != "chief" and current_user.role != "administrator":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="You can't add a food item",
@@ -77,7 +77,7 @@ def update_food_item(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    if current_user.role != "chief":
+    if current_user.role != "chief" and current_user.role != "administrator":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="You can't add a food item",
