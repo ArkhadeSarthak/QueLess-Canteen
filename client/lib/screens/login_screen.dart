@@ -1,6 +1,7 @@
 import 'package:flutter_modern_animated_loader/flutter_animated_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:queue_less/features/custom_input.dart';
 import 'package:queue_less/services/auth_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:queue_less/theme/app_strings.dart';
@@ -250,49 +251,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                           SizedBox(height: 5),
-                          TextFormField(
+                          CustomInput(
                             controller: _emailController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            onFieldSubmitted: (value) => FocusScope.of(
+                            onSubmit: (value) => FocusScope.of(
                               context,
                             ).requestFocus(_passwordFocus),
-                            style: GoogleFonts.outfit(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.darkGreen,
-                            ),
-                            decoration: InputDecoration(
-                              enabled: !_isLoading,
-                              filled: true,
-                              fillColor: AppColors.white,
-                              isDense: true,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              prefixIcon: Icon(
-                                Icons.email_outlined,
-                                color: AppColors.secondaryGreen,
-                                size: 18,
-                              ),
-                              hintText: "student@college.edu",
-                              hintStyle: GoogleFonts.outfit(
-                                color: AppColors.darkGreen,
-                                fontSize: 12,
-                              ),
-                            ),
+                            maxLines: 1,
+                            enabled: !_isLoading,
+                            prefixIcon: Icons.email_outlined,
+                            hintText: "student@college.edu",
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Enter email";
@@ -317,60 +284,25 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           SizedBox(height: 5),
-                          TextFormField(
+                          CustomInput(
                             controller: _passwordController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            obscureText: _obsecureText,
+                            onSubmit: (value) => login(),
+                            enabled: !_isLoading,
                             focusNode: _passwordFocus,
-                            style: GoogleFonts.outfit(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.darkGreen,
-                            ),
-                            onFieldSubmitted: (value) => login(),
-                            decoration: InputDecoration(
-                              enabled: !_isLoading,
-                              filled: true,
-                              fillColor: AppColors.white,
-                              isDense: true,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              prefixIcon: Icon(
-                                Icons.lock_outline,
+                            prefixIcon: Icons.lock_outline,
+                            obsecure: _obsecureText,
+                            hintText: "******",
+                            maxLines: 1,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                changeObsecure();
+                              },
+                              icon: Icon(
+                                _obsecureText
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
                                 color: AppColors.secondaryGreen,
                                 size: 18,
-                              ),
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  changeObsecure();
-                                },
-                                icon: Icon(
-                                  _obsecureText
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  color: AppColors.secondaryGreen,
-                                  size: 18,
-                                ),
-                              ),
-                              hintText: "-------",
-                              hintStyle: GoogleFonts.outfit(
-                                color: AppColors.darkGreen,
-                                fontSize: 12,
-                                letterSpacing: 3,
                               ),
                             ),
                             validator: (value) {

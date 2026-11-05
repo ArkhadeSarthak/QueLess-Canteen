@@ -7,8 +7,8 @@ import 'package:queue_less/theme/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserServices {
-  static String baseURL = "https://queueless-canteen-rho.vercel.app/users";
-  // static String baseURL = "http://10.0.2.2:8000/users";
+  // static String baseURL = "https://queueless-canteen-rho.vercel.app/users";
+  static String baseURL = "http://10.0.2.2:8000/users";
 
   Future<List<GetAllUsersModel>> featchUsers(BuildContext context) async {
     final response = await http.get(Uri.parse("$baseURL/"));

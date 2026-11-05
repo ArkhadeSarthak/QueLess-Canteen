@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:queue_less/features/custom_input.dart';
 import 'package:queue_less/services/token_services.dart';
 import 'package:queue_less/services/user_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
@@ -138,7 +139,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
 
     try {
-      final url = Uri.parse("https://queueless-canteen-rho.vercel.app/images/upload");
+      final url = Uri.parse(
+        "https://queueless-canteen-rho.vercel.app/images/upload",
+      );
       // final url = Uri.parse("http://10.0.2.2:8000/images/upload");
       final request = http.MultipartRequest("POST", url);
 
@@ -660,59 +663,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               SizedBox(height: 5),
-                              TextFormField(
+                              CustomInput(
                                 controller: _nameController,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                style: GoogleFonts.outfit(
-                                  color: AppColors.black,
-                                  fontSize: 16,
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.secondaryBackground,
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  hintText: "User Name",
-                                  hintStyle: GoogleFonts.outfit(
-                                    color: AppColors.badgeBack,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                                hintText: "User Name",
+                                borderRadius: 15,
+                                maxLines: 1,
+                                backColor: AppColors.secondaryBackground,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return "Please enter your name";
@@ -730,59 +686,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               SizedBox(height: 5),
-                              TextFormField(
+                              CustomInput(
                                 controller: _rollNoController,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                style: GoogleFonts.outfit(
-                                  color: AppColors.black,
-                                  fontSize: 16,
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.secondaryBackground,
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  hintText: "Your roll no",
-                                  hintStyle: GoogleFonts.outfit(
-                                    color: AppColors.badgeBack,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                                hintText: "Your roll no",
+                                borderRadius: 15,
+                                maxLines: 1,
+                                backColor: AppColors.secondaryBackground,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return "Please enter your roll no";
@@ -800,59 +709,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               SizedBox(height: 5),
-                              TextFormField(
+                              CustomInput(
                                 controller: _universityController,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                style: GoogleFonts.outfit(
-                                  color: AppColors.black,
-                                  fontSize: 16,
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.secondaryBackground,
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  hintText: "Your university name",
-                                  hintStyle: GoogleFonts.outfit(
-                                    color: AppColors.badgeBack,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                                hintText: "Your university name",
+                                borderRadius: 15,
+                                maxLines: 1,
+                                backColor: AppColors.secondaryBackground,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return "Please enter your university name";
@@ -870,59 +732,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               SizedBox(height: 5),
-                              TextFormField(
+                              CustomInput(
                                 controller: _courseController,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                style: GoogleFonts.outfit(
-                                  color: AppColors.black,
-                                  fontSize: 16,
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.secondaryBackground,
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  hintText: "Your course name",
-                                  hintStyle: GoogleFonts.outfit(
-                                    color: AppColors.badgeBack,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                                hintText: "Your course name",
+                                borderRadius: 15,
+                                maxLines: 1,
+                                backColor: AppColors.secondaryBackground,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return "Please enter your course";
@@ -980,74 +795,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 5),
-                                TextFormField(
+                                CustomInput(
                                   controller: _oldPasswordController,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  obscureText: _obsecureText,
-                                  style: GoogleFonts.outfit(
-                                    color: AppColors.black,
-                                    fontSize: 16,
-                                  ),
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.secondaryBackground,
-                                    isDense: true,
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.lock_outline,
+                                  hintText: "Old Password",
+                                  borderRadius: 15,
+                                  backColor: AppColors.secondaryBackground,
+                                  prefixIcon: Icons.lock_outline,
+                                  obsecure: _obsecureText,
+                                  maxLines: 1,
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      changeObsecure();
+                                    },
+                                    icon: Icon(
+                                      _obsecureText
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
                                       color: AppColors.secondaryGreen,
                                       size: 18,
-                                    ),
-                                    suffixIcon: IconButton(
-                                      onPressed: () {
-                                        changeObsecure();
-                                      },
-                                      icon: Icon(
-                                        Icons.visibility_outlined,
-                                        color: AppColors.secondaryGreen,
-                                        size: 18,
-                                      ),
-                                    ),
-                                    hintText: "xyz@123",
-                                    hintStyle: GoogleFonts.outfit(
-                                      color: AppColors.badgeBack,
-                                      fontSize: 16,
                                     ),
                                   ),
                                   validator: (value) {
@@ -1069,79 +834,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 5),
-                                TextFormField(
+                                CustomInput(
                                   controller: _passwordController,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  obscureText: _obsecureTextNew,
+                                  hintText: "New Password",
+                                  borderRadius: 15,
+                                  backColor: AppColors.secondaryBackground,
+                                  prefixIcon: Icons.lock_outline,
+                                  obsecure: _obsecureTextNew,
+                                  maxLines: 1,
                                   onChanged: (_) {
                                     _checkIsMatched();
                                   },
-                                  style: GoogleFonts.outfit(
-                                    color: AppColors.black,
-                                    fontSize: 16,
-                                  ),
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.secondaryBackground,
-                                    isDense: true,
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.lock_outline,
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _obsecureTextNew = !_obsecureTextNew;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      _obsecureTextNew
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
                                       color: AppColors.secondaryGreen,
                                       size: 18,
-                                    ),
-                                    suffixIcon: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _obsecureTextNew = !_obsecureTextNew;
-                                        });
-                                      },
-                                      icon: Icon(
-                                        Icons.visibility_outlined,
-                                        color: AppColors.secondaryGreen,
-                                        size: 18,
-                                      ),
-                                    ),
-                                    hintText: "xyz@123",
-                                    hintStyle: GoogleFonts.outfit(
-                                      color: AppColors.badgeBack,
-                                      fontSize: 16,
                                     ),
                                   ),
                                   validator: (value) {
@@ -1172,76 +887,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 5),
-                                TextFormField(
+                                CustomInput(
                                   controller: _confirmPasswordController,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  obscureText: true,
+                                  hintText: "Confirm Password",
+                                  borderRadius: 15,
+                                  backColor: AppColors.secondaryBackground,
+                                  prefixIcon: Icons.check_box_outlined,
+                                  obsecure: true,
+                                  maxLines: 1,
+                                  suffixIcon: Icon(
+                                    _isMatched ? Icons.verified_outlined : null,
+                                    color: AppColors.secondaryGreen,
+                                    size: 18,
+                                  ),
                                   onChanged: (_) {
                                     _checkIsMatched();
                                   },
-                                  style: GoogleFonts.outfit(
-                                    color: AppColors.black,
-                                    fontSize: 16,
-                                  ),
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.secondaryBackground,
-                                    isDense: true,
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.secondaryBackground,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.check_box_outlined,
-                                      color: AppColors.secondaryGreen,
-                                      size: 18,
-                                    ),
-                                    suffixIcon: Icon(
-                                      _isMatched
-                                          ? Icons.verified_outlined
-                                          : null,
-                                      color: AppColors.secondaryGreen,
-                                      size: 18,
-                                    ),
-                                    hintText: "xyz@123",
-                                    hintStyle: GoogleFonts.outfit(
-                                      color: AppColors.badgeBack,
-                                      fontSize: 16,
-                                    ),
-                                  ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return "Please enter password";

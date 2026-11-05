@@ -1,4 +1,5 @@
 import 'package:google_fonts/google_fonts.dart';
+import 'package:queue_less/features/custom_input.dart';
 import 'package:queue_less/features/sidebar.dart';
 import 'package:queue_less/features/top_bar.dart';
 import 'package:queue_less/features/update_food_item.dart';
@@ -212,51 +213,16 @@ class _MenuScreenState extends State<MenuScreen> {
                             ),
                           ),
                           SizedBox(height: 10),
-                          TextFormField(
-                            style: GoogleFonts.outfit(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.darkGreen,
-                            ),
+                          CustomInput(
                             controller: _searchController,
                             onChanged: (value) {
                               setState(() {
                                 searchText = value;
                               });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.white,
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: AppColors.darkGreen,
-                              ),
-                              hintText: "Search in canteen menu",
-                              hintStyle: GoogleFonts.outfit(
-                                color: AppColors.darkGreen,
-                                fontSize: 14,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                            ),
+                            prefixIcon: Icons.search,
+                            hintText: "Search in canteen menu",
+                            borderRadius: 15,
                           ),
                           SizedBox(height: 10),
                           SingleChildScrollView(
