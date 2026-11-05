@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:queue_less/services/token_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 
 class Sidebar extends StatefulWidget {
@@ -11,6 +12,22 @@ class Sidebar extends StatefulWidget {
 }
 
 class _SidebarState extends State<Sidebar> {
+  bool _isAdministrator = false;
+
+  Future<void> getMe() async {
+    Map<String, dynamic>? userJson = await getUserJson();
+    setState(() {
+      _isAdministrator =
+          userJson?["role"]?.toString().toLowerCase() == "administrator";
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getMe();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -62,29 +79,30 @@ class _SidebarState extends State<Sidebar> {
                 ),
               ),
               SizedBox(height: 10),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, "/all-users");
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.list_alt_outlined,
-                      color: AppColors.darkGreen,
-                      size: 22,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      "All Users",
-                      style: GoogleFonts.outfit(
+              if (_isAdministrator)
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/all-users");
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.list_alt_outlined,
                         color: AppColors.darkGreen,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
+                        size: 22,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 10),
+                      Text(
+                        "All Users",
+                        style: GoogleFonts.outfit(
+                          color: AppColors.darkGreen,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
               SizedBox(height: 10),
             ],
           ),

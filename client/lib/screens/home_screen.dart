@@ -1,4 +1,5 @@
 import 'package:google_fonts/google_fonts.dart';
+import 'package:queue_less/features/custom_input.dart';
 import 'package:queue_less/features/sidebar.dart';
 import 'package:queue_less/features/top_bar.dart';
 import 'package:queue_less/features/update_food_item.dart';
@@ -46,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _isAdministrator =
           userJson?["role"]?.toString().toLowerCase() == "administrator";
     });
-    // PermissionService.requestAllPermissions();
+    PermissionService.requestAllPermissions();
   }
 
   final FoodServices _foodServices = FoodServices();
@@ -218,55 +219,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           SizedBox(height: 15),
-                          TextFormField(
-                            style: GoogleFonts.outfit(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.darkGreen,
-                            ),
+                          CustomInput(
                             controller: _searchController,
                             onChanged: (value) {
                               setState(() {
                                 searchText = value;
                               });
                             },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.white.withValues(alpha: 0.7),
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: AppColors.darkGreen,
-                              ),
-                              suffixIcon: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.tune),
-                              ),
-                              hintText: "Search food, snacks or drinks",
-                              hintStyle: GoogleFonts.outfit(
-                                color: AppColors.darkGreen,
-                                fontSize: 14,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(color: AppColors.white),
-                              ),
+                            prefixIcon: Icons.search,
+                            suffixIcon: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.tune),
                             ),
+                            hintText: "Search food, snacks or drinks",
+                            borderRadius: 15,
                           ),
                           if (_isChief || _isAdministrator) ...[
                             SizedBox(height: 10),

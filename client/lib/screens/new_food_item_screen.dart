@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:queue_less/features/custom_input.dart';
 import 'package:queue_less/models/food_items_model.dart';
 import 'package:queue_less/services/food_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
@@ -86,7 +87,9 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
     });
 
     try {
-      final url = Uri.parse("https://queueless-canteen-rho.vercel.app/images/upload");
+      final url = Uri.parse(
+        "https://queueless-canteen-rho.vercel.app/images/upload",
+      );
       // final url = Uri.parse("http://10.0.2.2:8000/images/upload");
       final request = http.MultipartRequest("POST", url);
 
@@ -570,67 +573,18 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                 ),
                               ],
                             ),
-                            TextFormField(
+                            CustomInput(
                               controller: _nameController,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              style: GoogleFonts.outfit(
-                                color: AppColors.black,
-                                fontSize: 16,
-                              ),
                               onChanged: (value) {
                                 setState(() {
                                   _nameLength = value.trim().length;
                                 });
                               },
                               maxLength: 60,
-
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AppColors.secondaryBackground,
-                                isDense: true,
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                hintText: "Food Name",
-                                hintStyle: GoogleFonts.outfit(
-                                  color: AppColors.badgeBack,
-                                  fontSize: 16,
-                                ),
-                                counterText: "",
-                              ),
+                                  maxLines: 1,
+                              backColor: AppColors.secondaryBackground,
+                              borderRadius: 15,
+                              hintText: "Food Name",
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
                                   return "Please enter name";
@@ -664,14 +618,8 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                             ),
                             SizedBox(
                               height: 90,
-                              child: TextFormField(
+                              child: CustomInput(
                                 controller: _descriptionController,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                style: GoogleFonts.outfit(
-                                  color: AppColors.black,
-                                  fontSize: 16,
-                                ),
                                 onChanged: (value) {
                                   setState(() {
                                     _descLength = value.trim().length;
@@ -679,52 +627,9 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                 },
                                 maxLength: 150,
                                 maxLines: 3,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.secondaryBackground,
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.secondaryBackground,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  hintText: "Write Description",
-                                  hintStyle: GoogleFonts.outfit(
-                                    color: AppColors.badgeBack,
-                                    fontSize: 16,
-                                  ),
-                                  counterText: "",
-                                ),
+                                backColor: AppColors.secondaryBackground,
+                                borderRadius: 15,
+                                hintText: "Food Description",
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return "Please enter description";
@@ -801,79 +706,21 @@ class _NewFoodItemScreenState extends State<NewFoodItemScreen> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            TextFormField(
+                            CustomInput(
                               controller: _priceController,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
                               keyboardType: TextInputType.numberWithOptions(
                                 decimal: true,
                               ),
-                              inputFormatters: [
+                              formatter: [
                                 FilteringTextInputFormatter.allow(
                                   RegExp(r'^\d*\.?\d{0,2}'),
                                 ),
                               ],
-                              style: GoogleFonts.outfit(
-                                color: AppColors.black,
-                                fontSize: 16,
-                              ),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AppColors.secondaryBackground,
-                                isDense: true,
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColors.secondaryBackground,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                hintText: "Food Name",
-                                hintStyle: GoogleFonts.outfit(
-                                  color: AppColors.badgeBack,
-                                  fontSize: 16,
-                                ),
-                                prefixIcon: Center(
-                                  widthFactor: 1.0,
-                                  heightFactor: 1.0,
-                                  child: Text(
-                                    '₹',
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.darkGreen,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                  maxLines: 1,
+                              backColor: AppColors.secondaryBackground,
+                              borderRadius: 15,
+                              hintText: "Price",
+                              prefixIcon: Icons.currency_rupee_outlined,
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
                                   return "Please enter price";

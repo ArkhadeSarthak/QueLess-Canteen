@@ -1,5 +1,6 @@
 import 'package:flutter_modern_animated_loader/flutter_animated_loader.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:queue_less/features/custom_input.dart';
 import 'package:queue_less/services/auth_services.dart';
 import 'package:queue_less/theme/app_colors.dart';
 import 'package:queue_less/theme/app_strings.dart';
@@ -156,45 +157,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   SizedBox(height: 5),
-                  TextFormField(
+                  CustomInput(
                     controller: _nameController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     onChanged: (value) => _checkIsDisabled(),
-                    style: GoogleFonts.outfit(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGreen,
-                    ),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.white,
-                      isDense: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.person_2_outlined,
-                        color: AppColors.secondaryGreen,
-                        size: 18,
-                      ),
-                      hintText: "Student Name",
-                      hintStyle: GoogleFonts.outfit(
-                        color: AppColors.darkGreen,
-                        fontSize: 12,
-                      ),
-                    ),
+                    prefixIcon: Icons.person_2_outlined,
+                    hintText: "Student Name",
+                    maxLines: 1,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Please enter name";
@@ -230,45 +198,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   SizedBox(height: 5),
-                  TextFormField(
+                  CustomInput(
                     controller: _emailController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     onChanged: (value) => _checkIsDisabled(),
-                    style: GoogleFonts.outfit(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGreen,
-                    ),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.white,
-                      isDense: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.email_outlined,
-                        color: AppColors.secondaryGreen,
-                        size: 18,
-                      ),
-                      hintText: "student@college.edu",
-                      hintStyle: GoogleFonts.outfit(
-                        color: AppColors.darkGreen,
-                        fontSize: 12,
-                      ),
-                    ),
+                    prefixIcon: Icons.email_outlined,
+                    hintText: "student@college.edu",
+                    maxLines: 1,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "please enter email";
@@ -292,45 +227,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   SizedBox(height: 5),
-                  TextFormField(
+                  CustomInput(
                     controller: _idController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     onChanged: (value) => _checkIsDisabled(),
-                    style: GoogleFonts.outfit(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGreen,
-                    ),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.white,
-                      isDense: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.medical_information_outlined,
-                        color: AppColors.secondaryGreen,
-                        size: 18,
-                      ),
-                      hintText: "student@college.edu",
-                      hintStyle: GoogleFonts.outfit(
-                        color: AppColors.darkGreen,
-                        fontSize: 12,
-                      ),
-                    ),
+                    prefixIcon: Icons.medical_information_outlined,
+                    hintText: "Roll no / id",
+                    maxLines: 1,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Please enter roll no / id";
@@ -351,59 +253,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   SizedBox(height: 5),
-                  TextFormField(
+                  CustomInput(
                     controller: _passwordController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    obscureText: _obsecureText,
-                    onChanged: (_) {
+                    onChanged: (value) {
                       _checkIsMatched();
                       _checkIsDisabled();
                     },
-                    style: GoogleFonts.outfit(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGreen,
-                    ),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.white,
-                      isDense: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.lock_outline,
+                    obsecure: _obsecureText,
+                    maxLines: 1,
+                    prefixIcon: Icons.lock_outline,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        changeObsecure();
+                      },
+                      icon: Icon(
+                        Icons.visibility_outlined,
                         color: AppColors.secondaryGreen,
                         size: 18,
                       ),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          changeObsecure();
-                        },
-                        icon: Icon(
-                          Icons.visibility_outlined,
-                          color: AppColors.secondaryGreen,
-                          size: 18,
-                        ),
-                      ),
-                      hintText: "Pass@123",
-                      hintStyle: GoogleFonts.outfit(
-                        color: AppColors.darkGreen,
-                        fontSize: 12,
-                      ),
                     ),
+                    hintText: "Password",
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Please enter password";
@@ -433,66 +302,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   SizedBox(height: 5),
-                  TextFormField(
+                  CustomInput(
                     controller: _confirmPasswordController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    obscureText: true,
-                    onChanged: (_) {
+                    onChanged: (value) {
                       _checkIsMatched();
                       _checkIsDisabled();
                     },
-                    style: GoogleFonts.outfit(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.darkGreen,
+                    maxLines: 1,
+                    obsecure: true,
+                    prefixIcon: Icons.check_box_outlined,
+                    suffixIcon: Icon(
+                      _isMatched ? Icons.verified_outlined : null,
+                      color: AppColors.secondaryGreen,
+                      size: 18,
                     ),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.white,
-                      isDense: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.check_box_outlined,
-                        color: AppColors.secondaryGreen,
-                        size: 18,
-                      ),
-                      suffixIcon: Icon(
-                        _isMatched ? Icons.check_circle : null,
-                        color: AppColors.secondaryGreen,
-                        size: 18,
-                      ),
-                      hintText: "Pass@123",
-                      hintStyle: GoogleFonts.outfit(
-                        color: AppColors.darkGreen,
-                        fontSize: 12,
-                      ),
-                    ),
+                    hintText: "Password",
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Please enter password";
-                      }
-                      if (value == value.toLowerCase()) {
-                        return "Please add one capital letter";
-                      }
-                      if (value == value.toUpperCase()) {
-                        return "Please add one small letter";
-                      }
-                      if (value.length < 6) {
-                        return "Password must be atleast 6 char long";
                       }
                       return null;
                     },
